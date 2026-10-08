@@ -6,3 +6,5 @@ server_stdout.log
 audit-links.js
 .DS_Store
 Thumbs.db
+
+.vercel

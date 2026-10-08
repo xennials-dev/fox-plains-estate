@@ -42,13 +42,17 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Directories
+// Directories (with serverless safe fallback)
 const DATA_DIR = path.join(__dirname, 'data');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const UPLOADS_DIR = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
 const ASSETS_DIR = path.join(__dirname, 'assets');
 
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+} catch (_) {}
+try {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+} catch (_) {}
 
 // Static Assets with Cache-Control (1 day cache for static assets)
 const staticOptions = {
@@ -59,19 +63,19 @@ const staticOptions = {
 app.use('/uploads', express.static(UPLOADS_DIR, staticOptions));
 app.use('/assets', express.static(ASSETS_DIR, staticOptions));
 
-// Explicit Safe HTML Route Serving (Express 5 root option)
+// Explicit Safe HTML Route Serving
 app.get('/', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.sendFile('index.html', { root: __dirname });
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 app.get('/index.html', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.sendFile('index.html', { root: __dirname });
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
-app.get('/studio', (req, res) => res.sendFile('studio.html', { root: __dirname }));
-app.get('/studio.html', (req, res) => res.sendFile('studio.html', { root: __dirname }));
-app.get('/analytics', (req, res) => res.sendFile('analytics.html', { root: __dirname }));
-app.get('/analytics.html', (req, res) => res.sendFile('analytics.html', { root: __dirname }));
+app.get('/studio', (req, res) => res.sendFile(path.join(__dirname, 'studio.html')));
+app.get('/studio.html', (req, res) => res.sendFile(path.join(__dirname, 'studio.html')));
+app.get('/analytics', (req, res) => res.sendFile(path.join(__dirname, 'analytics.html')));
+app.get('/analytics.html', (req, res) => res.sendFile(path.join(__dirname, 'analytics.html')));
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({
@@ -128,12 +132,14 @@ async function persistAsync(filename, data) {
 
 // Debounced Analytics Persistence to eliminate I/O disk thrashing
 let analyticsDirty = false;
-setInterval(() => {
-  if (analyticsDirty && memoryCache.analytics) {
-    analyticsDirty = false;
-    persistAsync('analytics.json', memoryCache.analytics);
-  }
-}, 4000);
+if (!process.env.VERCEL) {
+  setInterval(() => {
+    if (analyticsDirty && memoryCache.analytics) {
+      analyticsDirty = false;
+      persistAsync('analytics.json', memoryCache.analytics);
+    }
+  }, 4000);
+}
 
 // Lead Notification Dispatcher (Pipes into Sovereign WhatsApp & Telegram Mesh)
 async function dispatchLeadNotification(lead) {
