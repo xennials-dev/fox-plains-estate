@@ -66,16 +66,20 @@ app.use('/assets', express.static(ASSETS_DIR, staticOptions));
 // Explicit Safe HTML Route Serving
 app.get('/', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile('index.html', { root: __dirname });
 });
 app.get('/index.html', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile('index.html', { root: __dirname });
 });
-app.get('/studio', (req, res) => res.sendFile(path.join(__dirname, 'studio.html')));
-app.get('/studio.html', (req, res) => res.sendFile(path.join(__dirname, 'studio.html')));
-app.get('/analytics', (req, res) => res.sendFile(path.join(__dirname, 'analytics.html')));
-app.get('/analytics.html', (req, res) => res.sendFile(path.join(__dirname, 'analytics.html')));
+app.get('/studio', (req, res) => res.sendFile('studio.html', { root: __dirname }));
+app.get('/studio.html', (req, res) => res.sendFile('studio.html', { root: __dirname }));
+app.get('/analytics', (req, res) => res.sendFile('analytics.html', { root: __dirname }));
+app.get('/analytics.html', (req, res) => res.sendFile('analytics.html', { root: __dirname }));
+const DRONE_DIR = path.join(__dirname, 'drone');
+app.use('/drone', express.static(DRONE_DIR));
+app.get('/drone', (req, res) => res.sendFile('index.html', { root: DRONE_DIR }));
+app.get('/drone/index.html', (req, res) => res.sendFile('index.html', { root: DRONE_DIR }));
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({

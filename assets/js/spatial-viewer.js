@@ -179,6 +179,10 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                 <span>Top-Down Blueprint</span>
               </button>
+              <button class="spatial-mode-btn" data-mode="drone" title="Autonomous 3D Drone Flight Path with Exact Interior Shots">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3c0 .88.39 1.67 1 2.22V9H6a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4v1.78A3.001 3.001 0 0 0 12 22a3 3 0 0 0 2-5.22V15h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4V7.22c.61-.55 1-1.34 1-2.22a3 3 0 0 0-3-3zM4 5h3M17 5h3M4 19h3M17 19h3"/></svg>
+                <span style="color:#8cf5b7;">3D Drone View</span>
+              </button>
             </div>
 
             <div class="spatial-actions">
@@ -201,6 +205,26 @@
           <!-- 3D CANVAS VIEWPORT -->
           <div class="spatial-viewport" id="spatialViewport">
             <canvas id="spatialCanvas"></canvas>
+
+            <!-- 3D DRONE VIEW OVERLAY -->
+            <div class="spatial-drone-overlay" id="spatialDroneOverlay" style="display:none;">
+              <div class="drone-overlay-bar">
+                <div class="drone-status-indicator">
+                  <span class="drone-live-dot"></span>
+                  <strong style="color:var(--gold, #c9a86a); font-size:11px; letter-spacing:0.12em;">AUTONOMOUS DRONE CONNECTED</strong>
+                  <span class="drone-sub-pill">Spline Route · Exact Interior Overlays</span>
+                </div>
+                <div class="drone-bar-actions">
+                  <a href="http://localhost:5173/" target="_blank" rel="noopener" class="drone-popout-btn" title="Open Drone View in Dedicated Tab">
+                    <span>Standalone (5173) ↗</span>
+                  </a>
+                  <button type="button" class="drone-close-btn" id="btnExitDrone" title="Switch back to 6DoF Free-Roam">
+                    <span>Exit Drone ✕</span>
+                  </button>
+                </div>
+              </div>
+              <iframe id="spatialDroneIframe" class="drone-iframe" src="" allow="autoplay; accelerometer; gyroscope"></iframe>
+            </div>
 
             <!-- 6DOF RETICLE & PROMPT -->
             <div class="spatial-reticle" id="spatialReticle">
@@ -721,6 +745,96 @@
           font-size: 11px;
           cursor: pointer;
         }
+
+        /* 3D Drone View Overlay */
+        .spatial-drone-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 25;
+          background: #090b0e;
+          display: flex;
+          flex-direction: column;
+        }
+        .drone-overlay-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 10px;
+          padding: 8px 16px;
+          background: rgba(8, 10, 13, 0.95);
+          backdrop-filter: blur(14px);
+          border-bottom: 1px solid rgba(140, 245, 183, 0.25);
+          z-index: 30;
+        }
+        .drone-status-indicator {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 11px;
+          color: #fff;
+        }
+        .drone-live-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #8cf5b7;
+          box-shadow: 0 0 12px rgba(140, 245, 183, 0.9);
+          animation: dronePulse 1.8s infinite ease-in-out;
+        }
+        @keyframes dronePulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.4; transform: scale(0.85); }
+        }
+        .drone-sub-pill {
+          font-size: 9px;
+          padding: 2px 8px;
+          border-radius: 999px;
+          background: rgba(140, 245, 183, 0.12);
+          color: #8cf5b7;
+          border: 1px solid rgba(140, 245, 183, 0.3);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .drone-bar-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .drone-popout-btn, .drone-close-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 12px;
+          border-radius: 6px;
+          font-size: 9.5px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          background: rgba(20, 24, 29, 0.85);
+          color: #edf3f7;
+        }
+        .drone-popout-btn:hover {
+          background: rgba(140, 245, 183, 0.15);
+          color: #8cf5b7;
+          border-color: #8cf5b7;
+        }
+        .drone-close-btn:hover {
+          background: rgba(230, 80, 80, 0.2);
+          color: #ff9e9e;
+          border-color: rgba(230, 80, 80, 0.4);
+        }
+        .drone-iframe {
+          flex: 1;
+          width: 100%;
+          height: 100%;
+          border: 0;
+          display: block;
+          background: #090b0e;
+        }
       `;
       document.head.appendChild(style);
     }
@@ -1106,6 +1220,14 @@
         if (this.audio.enabled) this.audio.init();
       });
 
+      const btnExitDrone = document.getElementById('btnExitDrone');
+      if (btnExitDrone) {
+        btnExitDrone.addEventListener('click', () => {
+          const btn6dof = this.container.querySelector('[data-mode="6dof"]');
+          if (btn6dof) btn6dof.click();
+        });
+      }
+
       // Level Toggles
       const levelButtons = this.container.querySelectorAll('.level-btn');
       levelButtons.forEach(btn => {
@@ -1348,6 +1470,42 @@
         this.pinsGroup.visible = true;
         this.controls.enabled = true;
         this.animateCameraTo(this.floorplanCamPos, new THREE.Vector3(0, 0, 0));
+      } else if (mode === 'drone') {
+        promptEl.textContent = 'Autonomous 3D Drone Active · Spline Flight & Exact Interior Overlays';
+        reticleEl.style.display = 'none';
+        this.nodeGroup.visible = false;
+        this.pinsGroup.visible = false;
+      }
+
+      // Handle Drone Overlay Container & Sub-controls
+      const droneOverlay = document.getElementById('spatialDroneOverlay');
+      const droneIframe = document.getElementById('spatialDroneIframe');
+      const minimapEl = document.getElementById('spatialMinimap');
+      const teleEl = document.getElementById('spatialTelemetry');
+      const helpEl = document.getElementById('spatialHelpBar');
+      const mobEl = document.getElementById('spatialMobileControls');
+
+      if (mode === 'drone') {
+        if (droneOverlay) droneOverlay.style.display = 'flex';
+        if (minimapEl) minimapEl.style.display = 'none';
+        if (teleEl) teleEl.style.display = 'none';
+        if (helpEl) helpEl.style.display = 'none';
+        if (mobEl) mobEl.style.display = 'none';
+
+        if (droneIframe) {
+          const targetDroneSrc = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:5173/'
+            : '/drone/';
+          if (!droneIframe.src || droneIframe.src === 'about:blank' || (!droneIframe.src.includes('5173') && !droneIframe.src.includes('/drone/'))) {
+            droneIframe.src = targetDroneSrc;
+          }
+        }
+      } else {
+        if (droneOverlay) droneOverlay.style.display = 'none';
+        if (minimapEl) minimapEl.style.display = 'block';
+        if (teleEl) teleEl.style.display = 'flex';
+        if (helpEl) helpEl.style.display = 'flex';
+        if (mobEl) mobEl.style.display = 'flex';
       }
 
       // Dispatch event to sync external viewpoint cards
@@ -1552,7 +1710,9 @@
       this.lastTime = now;
 
       // Mode-Specific Update
-      if (this.currentMode === '6dof') {
+      if (this.currentMode === 'drone') {
+        return;
+      } else if (this.currentMode === '6dof') {
         this.update6DoF(delta);
       } else if (this.currentMode === 'nodes') {
         // In Node mode, user looks around 360 from fixed bubble
