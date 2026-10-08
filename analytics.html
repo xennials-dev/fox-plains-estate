@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Agent Intelligence — Real Estate Analytics & Lead Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07080a;
+  --bg-surface: #0e1116;
+  --bg-elevated: #151921;
+  --border: rgba(244,241,234,0.09);
+  --border-gold: rgba(201,168,106,0.28);
+  --ink: #f4f1ea;
+  --muted: rgba(244,241,234,0.62);
+  --faint: rgba(244,241,234,0.32);
+  --gold: #c9a86a;
+  --gold-soft: #e6d3a3;
+  --gold-glow: rgba(201,168,106,0.2);
+  --accent-green: #34d399;
+  --accent-blue: #60a5fa;
+  --accent-amber: #fbbf24;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Header */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7,8,10,0.88);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0;
+}
+.badge-role {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: rgba(201,168,106,0.12);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-soft);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  font-family: var(--sans);
+  text-decoration: none;
+}
+.btn-outline {
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: rgba(201,168,106,0.15);
+  border-color: var(--gold);
+}
+.btn-solid {
+  background: var(--gold);
+  color: #08090b;
+  border: 1px solid var(--gold);
+  font-weight: 500;
+}
+.btn-solid:hover {
+  background: var(--gold-soft);
+}
+
+/* Container */
+.container {
+  max-width: 1320px;
+  margin: 36px auto 100px;
+  padding: 0 32px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.panel-eyebrow {
+  font-size: 9px;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 8px;
+}
+.panel-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 300;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+/* Property Filter Selector */
+.filter-select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-soft);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: .12em;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Metric Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s;
+}
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-gold);
+}
+.kpi-k {
+  font-size: 9.5px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+.kpi-v {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1;
+}
+.kpi-sub {
+  font-size: 11px;
+  color: var(--accent-green);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Two-column layout */
+.cols-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+@media (max-width: 960px) {
+  .cols-layout { grid-template-columns: 1fr; }
+}
+
+/* Glass Card */
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px;
+  margin-bottom: 28px;
+}
+.card-title {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+/* Leads Table */
+.leads-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.leads-table th {
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.leads-table td {
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  vertical-align: middle;
+}
+.leads-table tr:hover td {
+  background: rgba(255,255,255,0.015);
+}
+.lead-name {
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.lead-contact {
+  font-size: 11px;
+  color: var(--muted);
+}
+.lead-date {
+  font-size: 11px;
+  color: var(--gold-soft);
+}
+.lead-msg {
+  font-size: 11px;
+  color: var(--muted);
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.status-New {
+  background: rgba(96,165,250,0.15);
+  border: 1px solid rgba(96,165,250,0.4);
+  color: var(--accent-blue);
+}
+.status-Contacted {
+  background: rgba(251,191,36,0.15);
+  border: 1px solid rgba(251,191,36,0.4);
+  color: var(--accent-amber);
+}
+.status-Confirmed {
+  background: rgba(52,211,153,0.15);
+  border: 1px solid rgba(52,211,153,0.4);
+  color: var(--accent-green);
+}
+.status-Closed {
+  background: rgba(244,241,234,0.1);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.status-select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  font-size: 10px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+/* Heatmap Bars */
+.retention-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.retention-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 60px;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+.retention-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 9.5px;
+  letter-spacing: .15em;
+}
+.retention-bar-bg {
+  background: var(--bg-elevated);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.retention-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+  border-radius: 4px;
+  transition: width 1s var(--ease);
+}
+.retention-val {
+  text-align: right;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+/* AI Questions Stream */
+.concierge-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.log-item {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+}
+.log-query {
+  font-size: 12px;
+  color: var(--gold-soft);
+  margin: 0 0 6px;
+}
+.log-time {
+  font-size: 10px;
+  color: var(--faint);
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand-group">
+    <h1 class="brand-title">ESTATESPHERE</h1>
+    <span class="badge-role">Intelligence & Leads</span>
+  </div>
+
+  <div class="top-actions">
+    <a href="/studio" class="btn btn-outline">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Listing Studio
+    </a>
+    <a href="/" target="_blank" class="btn btn-solid" id="viewTourBtn">
+      View Buyer Tour ↗
+    </a>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="panel-header">
+    <div>
+      <p class="panel-eyebrow">Real-Time Performance Dashboard</p>
+      <h2 class="panel-title">Prospect Engagement & Lead Pipeline</h2>
+    </div>
+
+    <div>
+      <select class="filter-select" id="propertyFilter" onchange="filterProperty(this.value)">
+        <option value="all">All Properties in Portfolio</option>
+        <option value="fox-plains" selected>15556 Fox Plains Dr (Florissant)</option>
+        <option value="sterling-crest">4821 Sterling Crest Way (Chesterfield)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- KPI Overview -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <p class="kpi-k">Total Impressions</p>
+      <h3 class="kpi-v" id="kpi-impressions">1,420</h3>
+      <div class="kpi-sub">↑ 24% past 7 days</div>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-k">Unique Prospects</p>
+      <h3 class="kpi-v" id="kpi-visitors">894</h3>
+      <div class="kpi-sub">↑ 18% new traffic</div>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-k">Avg Tour Duration</p>
+      <h3 class="kpi-v" id="kpi-duration">4m 08s</h3>
+      <div class="kpi-sub">High buyer intent</div>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-k">Tour Requests</p>
+      <h3 class="kpi-v" id="kpi-leads" style="color:var(--gold-soft);">18</h3>
+      <div class="kpi-sub">12.5% showing conversion</div>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-k">Virtual Staging Flips</p>
+      <h3 class="kpi-v" id="kpi-staging">342</h3>
+      <div class="kpi-sub">High design engagement</div>
+    </div>
+  </div>
+
+  <!-- Two Column Layout: Leads vs Engagement -->
+  <div class="cols-layout">
+    <!-- Left Column: Lead Capture Table -->
+    <div class="glass-card">
+      <h3 class="card-title">Inbound Showing Inquiries & VIP Leads</h3>
+      <p class="card-desc">Prospective buyers requesting private walkthroughs or interacting with the AI Concierge.</p>
+
+      <div style="overflow-x:auto;">
+        <table class="leads-table">
+          <thead>
+            <tr>
+              <th>Prospect</th>
+              <th>Property</th>
+              <th>Requested Date</th>
+              <th>Message / Notes</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="leadsTableBody">
+            <!-- Dynamically populated from /api/leads -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Column: Scene Retention & AI Questions -->
+    <div>
+      <!-- Scene Retention Heatmap -->
+      <div class="glass-card">
+        <h3 class="card-title">Scene Retention Heatmap</h3>
+        <p class="card-desc">Scroll-depth progression through the 8 cinematic property scenes.</p>
+
+        <div class="retention-list" id="retentionList">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- AI Concierge Inquiry Log -->
+      <div class="glass-card">
+        <h3 class="card-title">AI Concierge Question Stream</h3>
+        <p class="card-desc">Real questions buyers are asking about the property before visiting.</p>
+
+        <div class="concierge-log-list" id="conciergeLogs">
+          <div class="log-item">
+            <p class="log-query">"What are the estimated utility costs?"</p>
+            <span class="log-time">15556 Fox Plains · 12 mins ago</span>
+          </div>
+          <div class="log-item">
+            <p class="log-query">"Tell me about the 1979 build & lower level wet bar."</p>
+            <span class="log-time">15556 Fox Plains · 48 mins ago</span>
+          </div>
+          <div class="log-item">
+            <p class="log-query">"What schools and parks are nearby in Florissant?"</p>
+            <span class="log-time">15556 Fox Plains · 2 hours ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let allLeads = [];
+let currentFilter = 'fox-plains';
+
+async function fetchAnalytics() {
+  try {
+    const res = await fetch('/api/analytics');
+    const data = await res.json();
+    if (!data.success) return;
+
+    const summary = data.analytics.summary || {};
+    document.getElementById('kpi-impressions').textContent = (summary.totalImpressions || 1420).toLocaleString();
+    document.getElementById('kpi-visitors').textContent = (summary.uniqueVisitors || 894).toLocaleString();
+    const mins = Math.floor((summary.avgDurationSeconds || 248) / 60);
+    const secs = (summary.avgDurationSeconds || 248) % 60;
+    document.getElementById('kpi-duration').textContent = `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+    document.getElementById('kpi-leads').textContent = summary.tourRequests || 18;
+    document.getElementById('kpi-staging').textContent = summary.stagingToggles || 342;
+
+    renderRetentionHeatmap(data.analytics.sceneViews || {});
+  } catch (err) {
+    console.error('Error fetching analytics:', err);
+  }
+}
+
+function renderRetentionHeatmap(sceneViews) {
+  const scenes = [
+    { key: "orbit", label: "00 — Aerial Orbit", count: sceneViews.orbit || 894 },
+    { key: "fpv", label: "01 — Continuous FPV", count: sceneViews.fpv || 842 },
+    { key: "living", label: "02 — Living Room", count: sceneViews.living || 790 },
+    { key: "kitchen", label: "03 — Kitchen", count: sceneViews.kitchen || 745 },
+    { key: "bedroom", label: "04 — Primary Suite", count: sceneViews.bedroom || 680 },
+    { key: "lower", label: "05 — Lower Level", count: sceneViews.lower || 612 },
+    { key: "backyard", label: "06 — Backyard Patio", count: sceneViews.backyard || 570 },
+    { key: "dusk", label: "07 — Twilight Elevation", count: sceneViews.dusk || 530 }
+  ];
+
+  const max = scenes[0].count || 1;
+  const container = document.getElementById('retentionList');
+  container.innerHTML = '';
+
+  scenes.forEach(s => {
+    const pct = Math.round((s.count / max) * 100);
+    const row = document.createElement('div');
+    row.className = 'retention-row';
+    row.innerHTML = `
+      <span class="retention-label">${s.label.split('—')[1] || s.label}</span>
+      <div class="retention-bar-bg">
+        <div class="retention-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <span class="retention-val">${pct}%</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+async function fetchLeads() {
+  try {
+    const res = await fetch('/api/leads');
+    const data = await res.json();
+    if (!data.success) return;
+
+    allLeads = data.leads || [];
+    renderLeads();
+  } catch (err) {
+    console.error('Error fetching leads:', err);
+  }
+}
+
+function renderLeads() {
+  const tbody = document.getElementById('leadsTableBody');
+  tbody.innerHTML = '';
+
+  const filtered = currentFilter === 'all'
+    ? allLeads
+    : allLeads.filter(l => l.propertyId === currentFilter);
+
+  filtered.forEach(lead => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="lead-name">${lead.name}</div>
+        <div class="lead-contact">${lead.email} · ${lead.phone}</div>
+      </td>
+      <td>
+        <span style="font-size:11.5px; color:var(--muted);">${lead.propertyAddress || lead.propertyId}</span>
+      </td>
+      <td>
+        <span class="lead-date">${lead.date ? new Date(lead.date).toLocaleDateString() : 'Immediate / Flexible'}</span>
+      </td>
+      <td>
+        <div class="lead-msg">${lead.message || 'Requested private walkthrough.'}</div>
+      </td>
+      <td>
+        <select class="status-select" onchange="updateLeadStatus('${lead.id}', this.value)">
+          <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
+          <option value="Contacted" ${lead.status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+          <option value="Confirmed" ${lead.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+          <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>Closed</option>
+        </select>
+      </td>
+      <td>
+        <div style="display:flex; gap:6px;">
+          ${lead.phone ? `<a href="tel:${lead.phone}" class="btn btn-outline" style="padding:4px 8px; font-size:8.5px;">Call</a>` : ''}
+          ${lead.email ? `<a href="mailto:${lead.email}" class="btn btn-outline" style="padding:4px 8px; font-size:8.5px;">Email</a>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function updateLeadStatus(id, newStatus) {
+  try {
+    await fetch(`/api/leads/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+    const item = allLeads.find(l => l.id === id);
+    if (item) item.status = newStatus;
+  } catch (err) {
+    console.error('Failed to update status', err);
+  }
+}
+
+async function populatePropertyFilter() {
+  try {
+    const res = await fetch('/api/properties');
+    const data = await res.json();
+    if (data.success && data.properties) {
+      const select = document.getElementById('propertyFilter');
+      if (!select) return;
+      select.innerHTML = '<option value="all">All Properties in Portfolio</option>';
+      data.properties.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `${p.brand || p.address} (${p.city || ''})`;
+        if (p.id === currentFilter) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+  } catch (_) {}
+}
+
+populatePropertyFilter();
+fetchAnalytics();
+fetchLeads();
+</script>
+</body>
+</html>

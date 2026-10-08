@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>15556 Fox Plains Dr — Florissant, Missouri | Private Tour & Concierge</title>
+<meta name="description" content="A cinematic, scroll-driven immersive property experience for 15556 Fox Plains Dr, Florissant, MO 63034. Features FPV drone flythrough, virtual staging, 3D dollhouse, and instant AI Property Concierge." />
+<meta name="theme-color" content="#07080a" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Preload Critical Hero Asset -->
+<link rel="preload" href="assets/img/exterior-day.jpg" as="image" />
+
+<!-- 3D Spatial Computing Engine Hook -->
+<script>
+window.loadSpatialEngine = function() {
+  if (typeof window.initSpatialViewer === 'function') {
+    return window.initSpatialViewer();
+  }
+};
+</script>
+<style>
+/* ============================================================
+   0. TOKENS & DESIGN SYSTEM
+   ============================================================ */
+:root{
+  --bg:#07080a; --bg-surface:#0d0f12; --bg-elevated:#13161a;
+  --ink:#f4f1ea;
+  --muted:rgba(244,241,234,.65); --faint:rgba(244,241,234,.36);
+  --line:rgba(244,241,234,.12); --line-gold:rgba(201,168,106,.3);
+  --gold:#c9a86a; --gold-soft:#e6d3a3; --gold-glow:rgba(201,168,106,.22);
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-spring:cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ============================================================
+   1. RESET & BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{overflow-x:clip;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;position:relative}
+img,video{display:block;max-width:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#0a0a0a}
+
+/* ============================================================
+   2. GRAIN + PROGRESS
+   ============================================================ */
+.grain{position:fixed;inset:-30%;z-index:90;pointer-events:none;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 7s steps(6) infinite;will-change:transform}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-4%)}
+  60%{transform:translate(-3%,-3%)}80%{transform:translate(4%,2%)}100%{transform:translate(0,0)}}
+.progress{position:fixed;top:0;left:0;width:100%;height:2px;z-index:120;
+  background:linear-gradient(90deg,var(--gold),var(--gold-soft));transform:scaleX(0);transform-origin:0 50%}
+
+/* ============================================================
+   3. LOADER
+   ============================================================ */
+#loader{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center;
+  transition:opacity .9s var(--ease),visibility .9s var(--ease)}
+#loader.is-done{opacity:0;visibility:hidden}
+.loader__mark{font-family:var(--serif);font-size:13px;letter-spacing:.62em;text-transform:uppercase;margin:0}
+.loader__bar{margin:24px auto 0;width:190px;height:1px;background:var(--line);position:relative;overflow:hidden}
+.loader__bar::after{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);
+  transform-origin:0 50%;animation:loadbar 1.7s var(--ease) forwards}
+@keyframes loadbar{to{transform:scaleX(1)}}
+
+/* ============================================================
+   4. NAV
+   ============================================================ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:110;display:flex;align-items:center;justify-content:space-between;
+  gap:24px;padding:18px clamp(20px,4vw,48px);border-bottom:1px solid transparent;
+  transition:background .5s var(--ease),border-color .5s var(--ease),backdrop-filter .5s var(--ease)}
+.nav.is-solid{background:rgba(7,8,10,.82);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  backdrop-filter:blur(18px) saturate(150%);border-bottom-color:var(--line)}
+.nav__brand{font-family:var(--serif);font-size:14px;letter-spacing:.34em;text-transform:uppercase;white-space:nowrap}
+.nav__links{display:flex;gap:22px;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.nav__links a{transition:color .3s var(--ease)}
+.nav__links a:hover{color:var(--gold)}
+.nav__right{display:flex;align-items:center;gap:18px}
+.nav__price{font-size:10px;color:var(--gold);letter-spacing:.14em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 24px;
+  border:1px solid var(--gold);border-radius:999px;color:var(--gold);font-size:9.5px;letter-spacing:.26em;
+  text-transform:uppercase;white-space:nowrap;
+  transition:background .45s var(--ease),color .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.btn:hover{background:var(--gold);color:#08090b;box-shadow:0 0 20px var(--gold-glow)}
+.btn--solid{background:var(--gold);color:#08090b}
+.btn--solid:hover{background:var(--gold-soft);border-color:var(--gold-soft)}
+
+/* ============================================================
+   5. JOURNEY — SCROLL-DRIVEN FILM (With Macro Aerial Orbit)
+   ============================================================ */
+.journey{position:relative;z-index:1}
+.journey__viewport{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
+.layer{position:absolute;inset:0;overflow:hidden;will-change:opacity;transform:translateZ(0)}
+.layer__media{position:absolute;inset:-8%;will-change:transform}
+.layer__media img,.layer__media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.layer__media video{opacity:0;transition:opacity .9s var(--ease)}
+.layer__media video.is-ready{opacity:1}
+.layer__scrim{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.2) 44%,rgba(0,0,0,.46) 100%)}
+.layer__vignette{position:absolute;inset:0;
+  background:radial-gradient(125% 95% at 50% 46%,transparent 32%,rgba(0,0,0,.75) 100%)}
+.layer__caption{position:absolute;inset:0;display:grid;place-items:center;
+  padding:0 clamp(24px,7vw,110px);text-align:center;will-change:opacity,transform}
+.layer--hero .layer__caption{place-items:end start;text-align:left;padding-bottom:clamp(70px,13vh,150px)}
+.kicker{margin:0 0 18px;font-size:9.5px;letter-spacing:.46em;text-transform:uppercase;color:var(--gold)}
+.title{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(36px,6.8vw,96px);
+  line-height:1.02;letter-spacing:-.015em;text-shadow:0 2px 40px rgba(0,0,0,.5)}
+.layer--hero .title{max-width:14ch}
+.copy{margin:24px auto 0;max-width:52ch;font-size:14.5px;line-height:1.85;color:var(--muted)}
+.layer--hero .copy{margin-left:0}
+.hero__meta{position:absolute;right:clamp(24px,7vw,110px);bottom:clamp(70px,13vh,150px);
+  text-align:right;display:grid;gap:8px}
+.hero__price{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(24px,2.6vw,38px);color:var(--gold-soft)}
+.hero__addr{margin:0;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);line-height:1.8}
+.hero__mls{margin:0;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint)}
+.scrollcue{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);display:grid;justify-items:center;
+  gap:10px;font-size:8.5px;letter-spacing:.44em;text-transform:uppercase;color:rgba(244,241,234,.45)}
+.scrollcue__line{width:1px;height:46px;background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:cue 2.4s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:50% 0}45%{transform:scaleY(1);transform-origin:50% 0}
+  55%{transform:scaleY(1);transform-origin:50% 100%}100%{transform:scaleY(0);transform-origin:50% 100%}}
+.rail{position:absolute;right:clamp(14px,3vw,34px);top:50%;z-index:30;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:flex-end;gap:13px}
+.rail__item{display:flex;align-items:center;gap:11px;padding:2px 0;font-size:9px;letter-spacing:.26em;
+  text-transform:uppercase;color:rgba(244,241,234,.34);transition:color .4s var(--ease)}
+.rail__item:hover{color:rgba(244,241,234,.72)}
+.rail__item.is-active{color:var(--gold)}
+.rail__line{width:20px;height:1px;background:currentColor;flex:none;transition:width .45s var(--ease)}
+.rail__item.is-active .rail__line{width:46px}
+.rail__label{opacity:0;transition:opacity .4s var(--ease);white-space:nowrap}
+.rail__item:hover .rail__label,.rail__item.is-active .rail__label{opacity:1}
+
+/* ============================================================
+   6. PANELS & SECTIONS
+   ============================================================ */
+.panel{position:relative;z-index:2;background:var(--bg);padding:clamp(80px,13vh,150px) clamp(24px,6vw,90px)}
+.panel + .panel{border-top:1px solid var(--line)}
+.wrap{max-width:1260px;margin:0 auto}
+.eyebrow{margin:0 0 20px;font-size:9.5px;letter-spacing:.46em;text-transform:uppercase;color:var(--gold)}
+.display{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(30px,4.5vw,62px);
+  line-height:1.08;letter-spacing:-.01em;max-width:22ch}
+.lede{margin:24px 0 0;max-width:56ch;font-size:15px;line-height:1.85;color:var(--muted)}
+.section-head{text-align:center}
+.section-head .display{margin:0 auto}
+.section-head .lede{margin-left:auto;margin-right:auto}
+
+/* Specs */
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);margin-top:56px}
+.spec{background:var(--bg);padding:30px 24px;transition:background .5s var(--ease)}
+.spec:hover{background:var(--bg-surface)}
+.spec__k{margin:0 0 12px;font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--faint)}
+.spec__v{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(22px,2.6vw,34px);line-height:1}
+
+/* Frames */
+.frame{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg-surface);
+  border:1px solid var(--line);margin-top:48px;border-radius:2px}
+.frame > img{width:100%;height:100%;object-fit:cover;transition:opacity .6s var(--ease),transform 1.6s var(--ease)}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.frame__cta{position:absolute;inset:0;z-index:2;display:grid;place-items:center;align-content:center;gap:18px;
+  text-align:center;padding:24px;background:radial-gradient(60% 60% at 50% 50%,rgba(0,0,0,.35),transparent)}
+
+/* ============================================================
+   7. VIRTUAL STAGING & LIFESTYLE VISUALIZER
+   ============================================================ */
+.staging-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px}
+.staging-card{background:var(--bg-surface);border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  display:flex;flex-direction:column}
+.staging-viewer{position:relative;aspect-ratio:16/10;overflow:hidden;background:#000}
+.staging-viewer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .7s var(--ease)}
+.staging-viewer img.is-active{opacity:1;z-index:2}
+.staging-viewer img:not(.is-active){opacity:0;z-index:1}
+.staging-controls{padding:20px 24px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);
+  background:var(--bg-elevated)}
+.staging-title{font-family:var(--serif);font-size:20px;font-weight:400;margin:0;color:var(--ink)}
+.staging-desc{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
+.toggle-group{display:inline-flex;background:var(--bg);border:1px solid var(--line);padding:4px;border-radius:999px;gap:4px}
+.toggle-btn{padding:8px 18px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;border-radius:999px;
+  color:var(--muted);transition:all .35s var(--ease)}
+.toggle-btn.is-active{background:var(--gold);color:#08090b;font-weight:500;box-shadow:0 2px 10px var(--gold-glow)}
+
+/* ============================================================
+   8. AERIAL NEIGHBORHOOD CONTEXT
+   ============================================================ */
+.aerial-container{position:relative;aspect-ratio:16/9;margin-top:48px;border:1px solid var(--line);
+  overflow:hidden;border-radius:2px}
+.aerial-container img{width:100%;height:100%;object-fit:cover}
+.hotspot-card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);margin-top:24px}
+.hotspot-card{background:var(--bg-surface);padding:22px 20px;display:grid;gap:6px;transition:background .35s var(--ease)}
+.hotspot-card:hover{background:var(--bg-elevated)}
+.hotspot-dist{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.hotspot-name{font-family:var(--serif);font-size:18px;margin:0;color:var(--ink)}
+.hotspot-desc{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+
+/* ============================================================
+   9. DAY / DUSK & DOLLHOUSE & MACROS
+   ============================================================ */
+.daynight{cursor:pointer}
+.daynight img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.daynight__night{opacity:0;transition:opacity 1.2s var(--ease)!important}
+.daynight.is-night .daynight__night{opacity:1}
+@media (hover:hover){.daynight:hover .daynight__night{opacity:1}}
+.daynight__toggle{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3;
+  display:inline-flex;align-items:center;gap:12px;padding:10px 20px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(7,8,10,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);
+  transition:color .4s var(--ease),border-color .4s var(--ease)}
+.daynight__toggle:hover{color:var(--gold);border-color:var(--gold)}
+.daynight__toggle b{color:var(--gold);font-weight:400}
+
+.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:56px}
+.macro{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--bg-surface);border:1px solid var(--line)}
+.macro video,.macro img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.macro img{transform-origin:var(--ox,50%) var(--oy,50%);animation:drift 14s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(var(--z,1.8))}to{transform:scale(calc(var(--z,1.8) + .25))}}
+.macro::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 50%);
+  opacity:.6;transition:opacity .5s var(--ease)}
+.macro:hover::after{opacity:1}
+.macro__label{position:absolute;left:0;right:0;bottom:0;padding:22px;z-index:2;font-size:9.5px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--ink);transform:translateY(4px);transition:transform .5s var(--ease)}
+.macro__label small{display:block;margin-top:6px;color:var(--gold);font-size:8.5px}
+
+.dollhouse > img{opacity:.55;filter:invert(.92) hue-rotate(180deg) saturate(.6)}
+.dollhouse:not(.is-empty){cursor:pointer}
+.dollhouse:hover > img{opacity:.75;transform:scale(1.03)}
+.pill{display:inline-flex;align-items:center;gap:12px;padding:16px 30px;border-radius:999px;border:1px solid var(--gold);
+  color:var(--gold);background:rgba(7,8,10,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;transition:background .5s var(--ease),color .5s var(--ease)}
+.dollhouse:not(.is-empty):hover .pill{background:var(--gold);color:#08090b}
+
+/* ============================================================
+   9B. FOUR ARCHITECTURAL VIEWPOINTS SHOWCASE CARDS
+   ============================================================ */
+.viewpoint-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+  margin-bottom: 20px;
+}
+@media (max-width: 1024px) {
+  .viewpoint-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .viewpoint-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.viewpoint-card {
+  position: relative;
+  background: rgba(13, 16, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(244, 241, 234, 0.12);
+  border-radius: 10px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.4s var(--ease);
+  overflow: hidden;
+  text-align: left;
+}
+.viewpoint-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.viewpoint-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 168, 106, 0.5);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.55), 0 0 24px rgba(201, 168, 106, 0.15);
+}
+.viewpoint-card:hover::before {
+  opacity: 1;
+}
+.viewpoint-card.is-active {
+  border-color: var(--gold);
+  background: rgba(20, 24, 30, 0.95);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.7), 0 0 32px rgba(201, 168, 106, 0.25);
+  transform: translateY(-2px);
+}
+.viewpoint-card.is-active::before {
+  opacity: 1;
+}
+
+.vp-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.vp-card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(201, 168, 106, 0.1);
+  border: 1px solid rgba(201, 168, 106, 0.25);
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  flex-shrink: 0;
+  transition: all 0.3s var(--ease);
+}
+.viewpoint-card.is-active .vp-card-icon,
+.viewpoint-card:hover .vp-card-icon {
+  background: var(--gold);
+  color: #08090b;
+  box-shadow: 0 0 14px var(--gold-glow);
+}
+.vp-card-badge {
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 241, 234, 0.15);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.viewpoint-card.is-active .vp-card-badge {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201, 168, 106, 0.12);
+}
+
+.vp-card-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+.vp-card-sub {
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 3px;
+}
+.vp-card-desc {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.vp-card-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  border: 1px dashed rgba(244, 241, 234, 0.12);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+}
+.vp-card-controls code {
+  color: var(--gold-soft);
+  font-family: monospace;
+}
+.vp-card-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  border: 1px solid rgba(244, 241, 234, 0.08);
+  transition: all 0.3s var(--ease);
+}
+.viewpoint-card:hover .vp-card-action {
+  color: var(--gold);
+  background: rgba(201, 168, 106, 0.08);
+  border-color: rgba(201, 168, 106, 0.25);
+}
+.viewpoint-card.is-active .vp-card-action {
+  color: var(--gold);
+  background: rgba(201, 168, 106, 0.15);
+  border-color: rgba(201, 168, 106, 0.4);
+  font-weight: 500;
+}
+.vp-card-action svg {
+  transition: transform 0.3s;
+}
+.viewpoint-card:hover .vp-card-action svg,
+.viewpoint-card.is-active .vp-card-action svg {
+  transform: translateX(3px);
+}
+
+/* ============================================================
+   10. AI PROPERTY CONCIERGE (Floating Chatbot Drawer)
+   ============================================================ */
+.concierge-trigger{position:fixed;bottom:28px;right:28px;z-index:150;
+  display:inline-flex;align-items:center;gap:12px;padding:14px 24px;border-radius:999px;
+  background:linear-gradient(135deg,#13161a,#0a0c0e);border:1px solid var(--gold);
+  color:var(--gold);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
+  box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 24px var(--gold-glow);
+  transition:all .4s var(--ease);cursor:pointer}
+.concierge-trigger:hover{transform:translateY(-3px);background:var(--gold);color:#08090b}
+.concierge-trigger .pulse{width:8px;height:8px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 10px var(--gold);animation:pulse-glow 2s infinite}
+.concierge-trigger:hover .pulse{background:#08090b;box-shadow:0 0 10px #08090b}
+@keyframes pulse-glow{0%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.3)}100%{opacity:.4;transform:scale(.9)}}
+
+.concierge-modal{position:fixed;bottom:90px;right:28px;width:min(440px,calc(100vw - 36px));height:min(580px,calc(100vh - 120px));
+  z-index:160;background:var(--bg-surface);border:1px solid var(--line-gold);border-radius:12px;
+  box-shadow:0 24px 60px rgba(0,0,0,.85),0 0 35px rgba(201,168,106,.15);
+  display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;transform:translateY(24px) scale(.96);pointer-events:none;
+  transition:opacity .4s var(--ease),transform .4s var(--ease-spring)}
+.concierge-modal.is-open{opacity:1;transform:none;pointer-events:all}
+
+.concierge-header{padding:18px 22px;background:var(--bg-elevated);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between}
+.concierge-header-title{display:flex;align-items:center;gap:10px}
+.concierge-badge{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.concierge-name{font-family:var(--serif);font-size:18px;margin:0;color:var(--ink)}
+.concierge-sub{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:2px 0 0}
+.concierge-close{color:var(--muted);padding:6px;font-size:18px;transition:color .3s}
+.concierge-close:hover{color:var(--ink)}
+
+.concierge-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.chat-msg{max-width:86%;padding:13px 16px;border-radius:12px;font-size:13px;line-height:1.6}
+.chat-msg--bot{background:var(--bg-elevated);border:1px solid var(--line);align-self:flex-start;color:var(--ink)}
+.chat-msg--bot b{color:var(--gold-soft);font-weight:500}
+.chat-msg--user{background:var(--gold);color:#08090b;align-self:flex-end;font-weight:400}
+.chat-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{padding:7px 12px;border:1px solid var(--line-gold);border-radius:999px;font-size:10px;color:var(--muted);
+  background:rgba(201,168,106,.06);transition:all .3s var(--ease)}
+.chip:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,106,.15)}
+
+.concierge-footer{padding:14px 18px;background:var(--bg-elevated);border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:10px}
+.concierge-input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:999px;
+  padding:10px 18px;font-size:12.5px;color:var(--ink);outline:none;transition:border-color .3s}
+.concierge-input:focus{border-color:var(--gold)}
+.concierge-send{width:36px;height:36px;border-radius:50%;background:var(--gold);display:grid;place-items:center;
+  color:#08090b;flex:none;transition:transform .3s var(--ease)}
+.concierge-send:hover{transform:scale(1.08)}
+
+/* ============================================================
+   11. CONTACT & FOOTER
+   ============================================================ */
+.contact{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(40px,6vw,96px);align-items:center;
+  max-width:1260px;margin:0 auto}
+.contact__media{position:relative;overflow:hidden;aspect-ratio:4/5;background:var(--bg-surface)}
+.contact__media img{width:100%;height:100%;object-fit:cover}
+.form{margin-top:40px;display:grid;gap:20px}
+.form__row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.field{display:grid;gap:8px}
+.field label{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--faint)}
+.field input,.field textarea{background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 0;
+  font-size:14px;outline:none;border-radius:0;color-scheme:dark;transition:border-color .4s var(--ease)}
+.field textarea{resize:vertical;min-height:80px}
+.field input:focus,.field textarea:focus{border-bottom-color:var(--gold)}
+.field input.is-invalid{border-bottom-color:#b5654f}
+.field input::placeholder,.field textarea::placeholder{color:rgba(244,241,234,.22)}
+.form__note{margin:12px 0 0;font-size:11px;line-height:1.8;color:var(--faint)}
+.form__ok{margin:12px 0 0;font-size:12px;letter-spacing:.12em;color:var(--gold);display:none}
+.form__ok.is-on{display:block}
+.agent{margin-top:40px;padding-top:28px;border-top:1px solid var(--line);display:grid;gap:6px}
+.agent__name{font-family:var(--serif);font-size:22px;font-weight:300;margin:0}
+.agent__meta{margin:0;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.agent__links{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px}
+.agent__links a{font-size:11px;letter-spacing:.16em;color:var(--muted);border-bottom:1px solid transparent;
+  padding-bottom:3px;transition:color .4s var(--ease),border-color .4s var(--ease)}
+.agent__links a:hover{color:var(--gold);border-bottom-color:var(--gold)}
+
+.footer{border-top:1px solid var(--line);padding:42px clamp(24px,6vw,90px);display:flex;flex-wrap:wrap;
+  justify-content:space-between;gap:18px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+
+/* Reveal Animations */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
+.reveal.is-in{opacity:1;transform:none}
+.reveal[data-d="1"]{transition-delay:.1s}.reveal[data-d="2"]{transition-delay:.2s}
+.reveal[data-d="3"]{transition-delay:.3s}.reveal[data-d="4"]{transition-delay:.4s}.reveal[data-d="5"]{transition-delay:.5s}
+
+/* Responsive */
+@media (max-width:1150px){.nav__links{display:none}}
+@media (max-width:1024px){
+  .specs{grid-template-columns:repeat(2,1fr)}
+  .staging-grid{grid-template-columns:1fr}
+  .hotspot-card-grid{grid-template-columns:repeat(2,1fr)}
+  .macros{grid-template-columns:repeat(2,1fr)}
+  .contact{grid-template-columns:1fr} .contact__media{aspect-ratio:16/11;order:-1} .hero__meta{display:none}
+}
+@media (max-width:720px){
+  .rail,.nav__price{display:none}
+  .nav__brand{font-size:11px;letter-spacing:.24em}
+  .btn{padding:10px 16px;font-size:8.5px;letter-spacing:.2em}
+  .specs,.macros,.form__row,.hotspot-card-grid{grid-template-columns:1fr}
+  .layer__caption{padding:0 22px} .layer--hero .layer__caption{padding:0 22px clamp(90px,18vh,150px)}
+  .copy{font-size:13.5px}
+  .frame{aspect-ratio:4/3}
+  .concierge-trigger{bottom:18px;right:18px;padding:12px 18px;font-size:8.5px}
+  .concierge-modal{bottom:80px;right:18px;left:18px;width:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .grain{display:none} .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div id="loader" role="status" aria-live="polite">
+  <div><p class="loader__mark" data-bind="brand"></p><div class="loader__bar"></div></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- NAVIGATION -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top" data-bind="brand"></a>
+  <nav class="nav__links" aria-label="Sections">
+    <a href="#aerial">Aerial Context</a>
+    <a href="#residence">Residence</a>
+    <a href="#staging">Visualizer</a>
+    <a href="#lifestyle">Film</a>
+    <a href="#lighting">Day &amp; Dusk</a>
+    <a href="#gallery">Craft</a>
+    <a href="#dollhouse">Spatial 3D Suite</a>
+  </nav>
+  <div class="nav__right">
+    <span class="nav__price" data-bind="price"></span>
+    <a class="btn" href="/studio" style="padding:8px 14px; font-size:8px; border-color:var(--line-gold); opacity:0.85;" title="Open Agent Studio & Listing Ingestion">Agent Studio ↗</a>
+    <a class="btn" href="#tour" id="navCta">Book a Private Tour</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1. FPV HERO + SCROLL FILM (With Macro-to-Micro Aerial & Interior Flow) -->
+  <section class="journey" id="journey" aria-label="Property film">
+    <div class="journey__viewport" id="viewport">
+      <nav class="rail" id="rail" aria-label="Scene navigation"></nav>
+    </div>
+  </section>
+
+  <!-- MACRO-TO-MICRO AERIAL CONTEXT -->
+  <section class="panel" id="aerial">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow reveal">Macro Context</p>
+        <h2 class="display reveal" data-d="1">The 0.20-Acre Footprint &amp; Neighborhood</h2>
+        <p class="lede reveal" data-d="2">
+          An elevated macro perspective over the Fox Plains enclave in Florissant, MO — showcasing the expansive flat lot, generous setback, and established mature tree canopy.
+        </p>
+      </div>
+
+      <div class="aerial-container reveal" data-d="3">
+        <img src="assets/img/aerial.jpg" alt="High-altitude aerial drone orbit of 15556 Fox Plains Dr" loading="lazy" />
+      </div>
+
+      <div class="hotspot-card-grid reveal" data-d="4">
+        <div class="hotspot-card">
+          <span class="hotspot-dist">4 Min / 1.4 Mi</span>
+          <h3 class="hotspot-name">St. Ferdinand Park</h3>
+          <p class="hotspot-desc">64 acres of walking trails, lighted ballfields, pavilions, and tranquil fishing lake.</p>
+        </div>
+        <div class="hotspot-card">
+          <span class="hotspot-dist">6 Min / 2.2 Mi</span>
+          <h3 class="hotspot-name">Koch Park &amp; Aquatic Center</h3>
+          <p class="hotspot-desc">Olympic-sized pool, water park, tennis courts, sand volleyball, and community recreation.</p>
+        </div>
+        <div class="hotspot-card">
+          <span class="hotspot-dist">8 Min / 3.5 Mi</span>
+          <h3 class="hotspot-name">I-270 / Lindbergh Corridor</h3>
+          <p class="hotspot-desc">Seamless highway connection across the greater St. Louis metropolitan area.</p>
+        </div>
+        <div class="hotspot-card">
+          <span class="hotspot-dist">14 Min / 8.8 Mi</span>
+          <h3 class="hotspot-name">Boeing &amp; Lambert Airport</h3>
+          <p class="hotspot-desc">Major regional employment hub and international airport access within easy commute.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE RESIDENCE (SPECS) -->
+  <section class="panel" id="residence">
+    <div class="wrap">
+      <p class="eyebrow reveal">The Residence</p>
+      <h1 class="display reveal" data-d="1" id="residenceHeadline"></h1>
+      <p class="lede reveal" data-d="2" id="residenceLede"></p>
+      <div class="specs" id="specs"></div>
+    </div>
+  </section>
+
+  <!-- 3. INTERACTIVE VIRTUAL STAGING & VISUALIZER -->
+  <section class="panel" id="staging">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow reveal">Virtual Staging &amp; Design</p>
+        <h2 class="display reveal" data-d="1">Visualize Living in the Space</h2>
+        <p class="lede reveal" data-d="2">
+          Toggle between design concepts to envision your lifestyle: explore the main living room in modern Japandi minimalist style or preview the backyard patio upgraded with an outdoor kitchen and fire pit.
+        </p>
+      </div>
+
+      <div class="staging-grid reveal" data-d="3">
+        <!-- Living Room Staging -->
+        <div class="staging-card">
+          <div class="staging-viewer" id="livingViewer">
+            <img src="assets/img/living.jpg" alt="Living Room Current Setup" class="is-active" data-variant="warm" />
+            <img src="assets/img/living-staged.jpg" alt="Living Room Virtually Staged Modern" data-variant="modern" />
+          </div>
+          <div class="staging-controls">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+              <h3 class="staging-title">Main Living Room</h3>
+              <div class="toggle-group" id="livingToggle">
+                <button type="button" class="toggle-btn is-active" data-target="warm">Warm Rustic</button>
+                <button type="button" class="toggle-btn" data-target="modern">Japandi Modern</button>
+              </div>
+            </div>
+            <p class="staging-desc">Switch from the warm brick hearth aesthetic to a sleek minimalist linen-and-oak Scandinavian layout.</p>
+          </div>
+        </div>
+
+        <!-- Backyard Staging -->
+        <div class="staging-card">
+          <div class="staging-viewer" id="backyardViewer">
+            <img src="assets/img/backyard.jpg" alt="Backyard Natural Lawn" class="is-active" data-variant="lawn" />
+            <img src="assets/img/backyard-staged.jpg" alt="Backyard Staged with Fire Pit & Kitchen" data-variant="kitchen" />
+          </div>
+          <div class="staging-controls">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+              <h3 class="staging-title">Backyard Patio &amp; Grounds</h3>
+              <div class="toggle-group" id="backyardToggle">
+                <button type="button" class="toggle-btn is-active" data-target="lawn">Open Lawn</button>
+                <button type="button" class="toggle-btn" data-target="kitchen">Fire Pit &amp; Kitchen</button>
+              </div>
+            </div>
+            <p class="staging-desc">Envision adding an outdoor barbecue island, cedar pergola, and modern fire pit lounge on the stamped patio.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIFESTYLE FILM -->
+  <section class="panel" id="lifestyle">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow reveal">The Film</p>
+        <h2 class="display reveal" data-d="1">Three minutes inside the life.</h2>
+        <p class="lede reveal" data-d="2">Morning light in the kitchen, the quiet of the lower level rec room, and the way the backyard holds the golden hour.</p>
+      </div>
+      <div class="frame film reveal" data-d="3" id="filmFrame">
+        <img id="filmPoster" alt="Lifestyle film poster" loading="lazy" />
+        <div class="frame__cta">
+          <button class="film__play" id="filmPlay" type="button" aria-label="Play the film">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="caption reveal" data-d="4" id="filmCaption"></p>
+    </div>
+  </section>
+
+  <!-- DAY / DUSK -->
+  <section class="panel" id="lighting">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow reveal">Architectural Lighting</p>
+        <h2 class="display reveal" data-d="1">Day to Dusk</h2>
+        <p class="lede reveal" data-d="2">Hover or tap to watch the exterior as the sun drops, with the brick facade and coach lights glowing at twilight.</p>
+      </div>
+      <div class="frame daynight reveal" data-d="3" id="dayNight" role="button" tabindex="0" aria-label="Toggle day and dusk view">
+        <img id="dayImg" alt="Home exterior in daylight" loading="lazy" />
+        <img class="daynight__night" id="nightImg" alt="Home exterior at dusk" loading="lazy" />
+        <span class="daynight__toggle" aria-hidden="true"><span>Now showing</span><b id="dayNightLabel">Day</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MACRO GALLERY -->
+  <section class="panel" id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow reveal">The Craft</p>
+        <h2 class="display reveal" data-d="1">Close enough to touch.</h2>
+        <p class="lede reveal" data-d="2">Short loops of the details: the shaker cabinetry, the painted hearth, the natural light. The places a wide shot can't reach.</p>
+      </div>
+      <div class="macros" id="macroGrid"></div>
+    </div>
+  </section>
+
+  <!-- 3D SPATIAL SUITE: 4 CUTTING-EDGE ARCHITECTURAL VIEWPOINTS -->
+  <section class="panel" id="dollhouse">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow reveal">Spatial Digital Twin &amp; Computing</p>
+        <h2 class="display reveal" data-d="1">Four Architectural Viewpoints</h2>
+        <p class="lede reveal" data-d="2">
+          Experience the estate through four cutting-edge architectural viewpoints: free-roaming <b>6 Degrees of Freedom (6DoF)</b> with translational walking &amp; rotational inspection, <b>Node-Based 360° Walkthrough</b> with bubble jumping, an open-cross-section <b>3D Dollhouse</b>, and an interactive <b>Top-Down Floor Plan</b> with live radar beacon and room teleportation.
+        </p>
+      </div>
+
+      <!-- INTERACTIVE 4-VIEWPOINT SHOWCASE CARDS -->
+      <div class="viewpoint-cards-grid reveal" data-d="2" id="viewpointCards">
+        
+        <!-- CARD 1: 6DoF FREE-ROAM -->
+        <div class="viewpoint-card is-active" data-mode="6dof" tabindex="0" role="button" aria-label="Activate 6 Degrees of Freedom Free Roam View">
+          <div class="vp-card-header">
+            <div class="vp-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/><circle cx="5" cy="12" r="2"/></svg>
+            </div>
+            <span class="vp-card-badge">6DoF Spatial</span>
+          </div>
+          <div>
+            <h3 class="vp-card-title">Free-Roaming 6DoF</h3>
+            <div class="vp-card-sub">Translational &amp; Rotational Freedom</div>
+          </div>
+          <p class="vp-card-desc">
+            Walk freely through every interior room at realistic 1.6m eye level. Full 3 translational axes (X, Y, Z) and 3 rotational axes (Pitch, Yaw, Roll) with natural footsteps and sprint.
+          </p>
+          <div class="vp-card-controls">
+            <span>Keys: <code>WASD</code> · <code>Space/C</code> · <code>Shift</code></span>
+          </div>
+          <div class="vp-card-action">
+            <span>Explore Free-Roam</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- CARD 2: NODE 360° WALKTHROUGH -->
+        <div class="viewpoint-card" data-mode="nodes" tabindex="0" role="button" aria-label="Activate Node-Based 360 Walkthrough View">
+          <div class="vp-card-header">
+            <div class="vp-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+            </div>
+            <span class="vp-card-badge">Matterport-Style</span>
+          </div>
+          <div>
+            <h3 class="vp-card-title">Node 360° Walkthrough</h3>
+            <div class="vp-card-sub">Guided Bubble Jumping</div>
+          </div>
+          <p class="vp-card-desc">
+            Glide between high-fidelity spatial bubbles across 6 key rooms. Click pulsing floor rings or carousel bubbles to jump from the Foyer to the Quartz Kitchen, Primary Suite, and Lower Rec Room.
+          </p>
+          <div class="vp-card-controls">
+            <span>Interaction: <code>Click Glowing Floor Targets</code></span>
+          </div>
+          <div class="vp-card-action">
+            <span>Tour Key Nodes</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- CARD 3: 3D DOLLHOUSE -->
+        <div class="viewpoint-card" data-mode="dollhouse" tabindex="0" role="button" aria-label="Activate 3D Dollhouse Isometric View">
+          <div class="vp-card-header">
+            <div class="vp-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+            </div>
+            <span class="vp-card-badge">Open Cross-Section</span>
+          </div>
+          <div>
+            <h3 class="vp-card-title">Open-Section Dollhouse</h3>
+            <div class="vp-card-sub">Multi-Story Maquette Model</div>
+          </div>
+          <p class="vp-card-desc">
+            Step back into an architectural miniature cutaway. Slice roofs away to inspect interior adjacencies, floor-to-ceiling heights, and multi-level layout flow with orbital 360° rotation and tilt.
+          </p>
+          <div class="vp-card-controls">
+            <span>Controls: <code>Orbit Drag</code> · <code>Scroll Zoom</code> · <code>Pins</code></span>
+          </div>
+          <div class="vp-card-action">
+            <span>Inspect Dollhouse</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- CARD 4: TOP-DOWN BLUEPRINT -->
+        <div class="viewpoint-card" data-mode="floorplan" tabindex="0" role="button" aria-label="Activate Top-Down Floor Plan Blueprint View">
+          <div class="vp-card-header">
+            <div class="vp-card-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/><circle cx="15" cy="15" r="2"/></svg>
+            </div>
+            <span class="vp-card-badge">Live Radar Beacon</span>
+          </div>
+          <div>
+            <h3 class="vp-card-title">Top-Down Floor Plan</h3>
+            <div class="vp-card-sub">Blueprint &amp; Teleportation</div>
+          </div>
+          <p class="vp-card-desc">
+            Orthographic schematic blueprint of the 2,300 sq ft residence. Features a real-time directional radar beacon matching your current viewing cone, with instant one-click room teleportation.
+          </p>
+          <div class="vp-card-controls">
+            <span>Radar: <code>Directional Beacon</code> · <code>Click Teleport</code></span>
+          </div>
+          <div class="vp-card-action">
+            <span>Launch Blueprint</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="spatialViewerMount" style="min-height: 720px; display: block; opacity: 1; margin-top: 36px; border-radius: 12px; overflow: hidden; position: relative;"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT & TOUR -->
+  <section class="panel" id="tour">
+    <div class="contact">
+      <div class="reveal">
+        <p class="eyebrow">Private Tour</p>
+        <h2 class="display">See it in person.</h2>
+        <p class="lede">Showings are by appointment and accompanied by the listing agent. Evening and weekend times are available.</p>
+        <form class="form" id="tourForm" novalidate>
+          <div class="form__row">
+            <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" placeholder="Full name" required autocomplete="name" /></div>
+            <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" placeholder="you@email.com" required autocomplete="email" /></div>
+          </div>
+          <div class="form__row">
+            <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" placeholder="(314) 000-0000" autocomplete="tel" /></div>
+            <div class="field"><label for="f-date">Preferred Date</label><input id="f-date" name="date" type="date" /></div>
+          </div>
+          <div class="field"><label for="f-msg">Message</label><textarea id="f-msg" name="message" placeholder="Anything we should know before your visit?"></textarea></div>
+          <div>
+            <button class="btn btn--solid" type="submit" id="formSubmit">Request Appointment</button>
+            <p class="form__ok" id="formOk" role="status">Received. The listing agent will be in touch shortly.</p>
+            <p class="form__note">By submitting, you agree to be contacted about this property.</p>
+          </div>
+        </form>
+        <div class="agent">
+          <p class="agent__name" id="agentName"></p>
+          <p class="agent__meta" id="agentMeta"></p>
+          <div class="agent__links"><a id="agentPhone" href="#"></a><a id="agentEmail" href="#"></a></div>
+        </div>
+      </div>
+      <div class="contact__media reveal" data-d="1"><img id="contactImg" alt="Living room of the home" loading="lazy" /></div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span id="footAddr"></span><span id="footMls"></span>
+  <span>© <span id="year"></span> <span id="footBroker"></span></span>
+  <span>Equal Housing Opportunity</span>
+</footer>
+
+<!-- ============================================================
+     AI PROPERTY CONCIERGE (Floating Conversational Agent)
+     ============================================================ -->
+<button class="concierge-trigger" id="conciergeTrigger" aria-label="Open AI Property Concierge">
+  <span class="pulse"></span>
+  <span>Ask Property AI</span>
+</button>
+
+<div class="concierge-modal" id="conciergeModal" role="dialog" aria-modal="true" aria-labelledby="conciergeTitle">
+  <div class="concierge-header">
+    <div class="concierge-header-title">
+      <span class="concierge-badge"></span>
+      <div>
+        <h3 class="concierge-name" id="conciergeTitle">Fox Plains Concierge</h3>
+        <p class="concierge-sub">Property Intelligence Assistant</p>
+      </div>
+    </div>
+    <button class="concierge-close" id="conciergeClose" aria-label="Close Concierge">✕</button>
+  </div>
+
+  <div class="concierge-body" id="conciergeBody">
+    <div class="chat-msg chat-msg--bot">
+      Hello! I'm the dedicated AI concierge for <b>15556 Fox Plains Dr</b>. I can instantly answer questions about utility estimates, the 1979 build &amp; updates, lot boundary, neighborhood parks, or help you book a private walkthrough.
+    </div>
+    <div class="chat-chips" id="chatChips">
+      <button class="chip" data-q="What are the estimated utility costs?">⚡ Estimated utility costs?</button>
+      <button class="chip" data-q="Tell me about the 1979 build and lower level">🏠 1979 build &amp; lower level details</button>
+      <button class="chip" data-q="What schools and parks are nearby in Florissant?">🌳 Nearby parks &amp; schools</button>
+      <button class="chip" data-q="How do I schedule a private tour?">📅 Schedule a private tour</button>
+    </div>
+  </div>
+
+  <form class="concierge-footer" id="conciergeForm">
+    <input type="text" class="concierge-input" id="conciergeInput" placeholder="Ask anything about 15556 Fox Plains..." autocomplete="off" />
+    <button type="submit" class="concierge-send" aria-label="Send message">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </form>
+</div>
+
+<!-- Core 3D WebGL Spatial Suite Engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="assets/js/spatial-viewer.js"></script>
+
+<script>
+/* ==============================================================
+   ESTATESPHERE DYNAMIC PROPERTY LOADER & ENGINE
+   ============================================================== */
+const DEFAULT_PROPERTY = {
+  id: "fox-plains",
+  brand: "Fox Plains",
+  address: "15556 Fox Plains Dr",
+  city: "Florissant, Missouri 63034",
+  price: "$254,000",
+  mls: "MLS# 24058912",
+  broker: "Marchetti Real Estate Partners",
+  headline: "A classic brick ranch on a quiet, tree-lined street.",
+  lede: "Set on a flat 0.20-acre lot in the Fox Plains subdivision, this 3-bedroom home pairs solid 1979 construction with high-demand features: an updated eat-in kitchen, a versatile finished lower level, stamped patio, and an attached two-car garage.",
+  agent: {
+    name: "Ava Marchetti",
+    title: "Senior Listing Partner · MO Lic #20190488",
+    phone: "(314) 555-0194",
+    email: "ava@marchettiestates.com"
+  },
+  specs: [
+    { k: "Bedrooms", v: "3" },
+    { k: "Bathrooms", v: "2" },
+    { k: "Interior", v: "1,300 sq ft" },
+    { k: "Lower Level", v: "Finished Rec Rm" },
+    { k: "Lot Size", v: "0.20 acres" },
+    { k: "Garage", v: "2-car attached" }
+  ],
+  scenes: [
+    { id: "orbit", label: "Aerial Orbit", kicker: "00 — Aerial Context", title: "The Neighborhood, From Above", copy: "An opening high-altitude orbit over Fox Plains. Established trees, quiet drives, and a 0.20-acre level footprint.", poster: "assets/img/aerial.jpg", video: "" },
+    { id: "fpv", label: "Flythrough", kicker: "01 — Continuous FPV", title: "Driveway to Backyard, One Take", copy: "From the wide concrete drive, gliding through the front entry, and flowing seamlessly out to the patio.", poster: "assets/img/exterior-day.jpg", video: "" },
+    { id: "living", label: "Living Room", kicker: "02 — The Living Room", title: "Light Through the Front Window", copy: "A generous living room with a wide picture window, a painted-brick hearth and warm oak floors.", poster: "assets/img/living.jpg", video: "" },
+    { id: "kitchen", label: "Kitchen", kicker: "03 — The Kitchen", title: "Eat-In, and Open", copy: "White shaker cabinetry, quartz counters and a bay-window breakfast nook that looks out over the yard.", poster: "assets/img/kitchen.jpg", video: "" },
+    { id: "bedroom", label: "Primary Bedroom", kicker: "04 — The Primary Bedroom", title: "Quiet, and Full of Light", copy: "Three bedrooms on the main level. The primary bedroom faces the garden through two tall windows.", poster: "assets/img/bedroom.jpg", video: "" },
+    { id: "lower", label: "Lower Level", kicker: "05 — The Lower Level", title: "Room to Grow", copy: "A finished lower level with a rec room, a wet bar and space for a home office or entertainment suite.", poster: "assets/img/lower-level.jpg", video: "" },
+    { id: "backyard", label: "Backyard", kicker: "06 — The Backyard", title: "A Level Lot, Fully Fenced", copy: "A stamped-concrete patio, mature shade trees and a lawn with room for a garden or outdoor kitchen.", poster: "assets/img/backyard.jpg", video: "" },
+    { id: "dusk", label: "Evening", kicker: "07 — Twilight Elevation", title: "Welcome Home", copy: "As the street goes quiet, every window glows. Brick, good bones and a place to land.", poster: "assets/img/exterior-dusk.jpg", video: "" }
+  ],
+  lifestyle: { youtubeId: "", poster: "assets/img/exterior-dusk.jpg" },
+  dayNight: { day: "assets/img/exterior-day.jpg", night: "assets/img/exterior-dusk.jpg" },
+  macros: [
+    { label: "Shaker Cabinetry", note: "Kitchen", poster: "assets/img/kitchen.jpg", video: "", z: 2.2, ox: "30%", oy: "55%" },
+    { label: "Painted Brick Hearth", note: "Living Room", poster: "assets/img/living.jpg", video: "", z: 2.4, ox: "76%", oy: "52%" },
+    { label: "Linen & Oak", note: "Primary", poster: "assets/img/bedroom.jpg", video: "", z: 2.0, ox: "45%", oy: "65%" },
+    { label: "Bay Window Nook", note: "Kitchen", poster: "assets/img/kitchen.jpg", video: "", z: 2.0, ox: "82%", oy: "60%" },
+    { label: "Stamped Patio", note: "Backyard", poster: "assets/img/backyard.jpg", video: "", z: 2.0, ox: "70%", oy: "70%" },
+    { label: "Lantern Light", note: "Front Entry", poster: "assets/img/exterior-dusk.jpg", video: "", z: 2.6, ox: "44%", oy: "60%" }
+  ],
+  matterport: { id: "", poster: "assets/img/dollhouse.jpg" },
+  knowledge: [
+    { triggers: ['utility', 'electric', 'gas', 'water', 'cost', 'bills', 'monthly'], response: "<b>Estimated Utilities:</b><br>• Electric (Ameren MO): ~$110–$145/mo avg.<br>• Gas (Spire): ~$65–$95/mo avg in winter.<br>• Water/Sewer (Missouri American & MSD): ~$70/mo.<br>• Trash: Florissant municipal services.<br><i>Actual costs vary by personal usage and heating preferences.</i>" },
+    { triggers: ['1979', 'build', 'foundation', 'roof', 'hvac', 'basement', 'lower', 'rec room', 'structure', 'sq ft', 'size'], response: "<b>Construction & Features:</b><br>• <b>Built in 1979</b> with classic single-story brick veneer and vinyl siding for minimal maintenance.<br>• <b>1,300 sq ft</b> on the main level featuring 3 beds & 2 baths.<br>• <b>Finished Lower Level:</b> Expansive carpeted rec room with built-in wet bar, recessed LED lighting, and dedicated laundry/storage wing.<br>• <b>Garage:</b> 2-car attached garage with direct interior access." },
+    { triggers: ['school', 'park', 'parks', 'neighborhood', 'florissant', 'ferdinand', 'koch', 'district', 'area', 'location'], response: "<b>Neighborhood & Locale:</b><br>• <b>School District:</b> Hazelwood School District (Walker Elementary / Hazelwood Central cluster).<br>• <b>Parks:</b> St. Ferdinand Park (4 min, 64 acres with fishing lake) and Koch Park & Aquatic Center (6 min).<br>• <b>Commutes:</b> ~14 min to Boeing campus & St. Louis Lambert Airport, ~25 min to Clayton, ~28 min to Downtown St. Louis via I-270." },
+    { triggers: ['tour', 'showing', 'schedule', 'appointment', 'visit', 'book', 'see', 'agent', 'ava'], response: "I can help you arrange a private viewing with listing partner <b>Ava Marchetti</b>! You can fill out the form at the bottom of the page, or email her directly at <a href='mailto:ava@marchettiestates.com' style='color:var(--gold);text-decoration:underline'>ava@marchettiestates.com</a> / call <a href='tel:3145550194' style='color:var(--gold);text-decoration:underline'>(314) 555-0194</a>." },
+    { triggers: ['price', 'cost', 'hoa', 'tax', 'taxes', 'cma', 'financing'], response: "<b>Pricing & Financial Context:</b><br>• <b>Offered Price:</b> $254,000 (anchored to recent sales in Fox Plains).<br>• <b>Estimated Annual Real Estate Taxes:</b> ~$2,600–$2,900/year (St. Louis County).<br>• <b>HOA:</b> No mandatory master association fee in Fox Plains.<br>• Financing: Eligible for Conventional, FHA, and VA loan programs." }
+  ]
+};
+
+let PROPERTY = DEFAULT_PROPERTY;
+
+/* Helpers */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const smoothstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let layers = [], railItems = [], N = 8;
+let vh = innerHeight, unit = vh * 1.5;
+let ticking = false;
+
+/* ==============================================================
+   INITIALIZATION & DYNAMIC INGESTION
+   ============================================================== */
+async function initEcosystem() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const propId = urlParams.get('id') || 'fox-plains';
+
+  try {
+    const res = await fetch(`/api/properties/${propId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.property) {
+        PROPERTY = data.property;
+      }
+    }
+  } catch (err) {
+    console.warn("API offline, utilizing local embedded property baseline.");
+  }
+
+  // Record page impression
+  try {
+    fetch('/api/analytics/event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'page_view', propertyId: PROPERTY.id })
+    });
+  } catch (_) {}
+
+  renderMicrosite();
+}
+
+function renderMicrosite() {
+  document.title = `${PROPERTY.address} — ${PROPERTY.city} | Private Tour & Concierge`;
+
+  // Bind Text
+  $$('[data-bind]').forEach(el => { el.textContent = PROPERTY[el.dataset.bind] || ''; });
+  $('#residenceHeadline').textContent = PROPERTY.headline || '';
+  $('#residenceLede').textContent = PROPERTY.lede || '';
+
+  // Setup Journey Scenes
+  const journeyEl = $('#journey'), viewportEl = $('#viewport'), railEl = $('#rail');
+  railEl.innerHTML = '';
+  // Clean old layers except rail
+  viewportEl.querySelectorAll('.layer').forEach(l => l.remove());
+
+  layers = []; railItems = [];
+  N = PROPERTY.scenes.length;
+
+  PROPERTY.scenes.forEach((scene, i) => {
+    const isHero = i === 0;
+    const layer = document.createElement('article');
+    layer.className = 'layer' + (isHero ? ' layer--hero' : '');
+    layer.style.zIndex = String(10 + i);
+    layer.setAttribute('aria-label', scene.label);
+    layer.innerHTML = `
+      <div class="layer__media">
+        <img alt="${scene.title}" src="${scene.poster}" ${isHero ? 'fetchpriority="high"' : 'loading="lazy"'} />
+        ${scene.video ? `<video muted loop playsinline preload="none" data-src="${scene.video}"></video>` : ''}
+      </div>
+      <div class="layer__scrim"></div>
+      <div class="layer__vignette"></div>
+      <div class="layer__caption"><div>
+        <p class="kicker">${scene.kicker}</p>
+        ${isHero ? `<p class="title">${scene.title}</p>` : `<h2 class="title">${scene.title}</h2>`}
+        <p class="copy">${scene.copy}</p>
+      </div></div>
+      ${isHero ? `
+        <div class="hero__meta">
+          <p class="hero__price">${PROPERTY.price}</p>
+          <p class="hero__addr">${PROPERTY.address}<br>${PROPERTY.city}</p>
+          <p class="hero__mls">${PROPERTY.mls}</p>
+        </div>
+        <div class="scrollcue"><span>Scroll</span><span class="scrollcue__line"></span></div>` : ''}`;
+
+    const video = layer.querySelector('video');
+    if (video) video.addEventListener('canplay', () => video.classList.add('is-ready'));
+
+    viewportEl.insertBefore(layer, railEl);
+    layers.push({
+      el: layer, media: layer.querySelector('.layer__media'), caption: layer.querySelector('.layer__caption'),
+      heroMeta: layer.querySelector('.hero__meta'), scrollcue: layer.querySelector('.scrollcue'), video
+    });
+
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'rail__item';
+    item.id = `rail-${scene.id}`;
+    item.setAttribute('aria-label', `Go to ${scene.label}`);
+    item.innerHTML = `<span class="rail__label">${scene.label}</span><span class="rail__line"></span>`;
+    railEl.appendChild(item);
+    railItems.push(item);
+  });
+
+  railItems.forEach((item, i) => item.addEventListener('click', () => {
+    const top = journeyEl.getBoundingClientRect().top + scrollY;
+    scrollTo({ top: top + i * unit, behavior: REDUCED ? 'auto' : 'smooth' });
+  }));
+
+  // Specs
+  const specsContainer = $('#specs');
+  specsContainer.innerHTML = '';
+  PROPERTY.specs.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'spec reveal is-in';
+    d.dataset.d = String(Math.min(i, 5));
+    d.innerHTML = `<p class="spec__k">${s.k}</p><p class="spec__v">${s.v}</p>`;
+    specsContainer.appendChild(d);
+  });
+
+  // Virtual Staging Images
+  if (PROPERTY.staging && PROPERTY.staging.length > 0) {
+    const st0 = PROPERTY.staging[0];
+    if (st0 && $('#livingViewer')) {
+      const imgs = $('#livingViewer').querySelectorAll('img');
+      if (imgs[0]) imgs[0].src = st0.vacant;
+      if (imgs[1]) imgs[1].src = st0.staged;
+    }
+    const st1 = PROPERTY.staging[1];
+    if (st1 && $('#backyardViewer')) {
+      const imgs = $('#backyardViewer').querySelectorAll('img');
+      if (imgs[0]) imgs[0].src = st1.vacant;
+      if (imgs[1]) imgs[1].src = st1.staged;
+    }
+  }
+
+  // Day / Dusk
+  if (PROPERTY.dayNight) {
+    if ($('#dayImg')) $('#dayImg').src = PROPERTY.dayNight.day;
+    if ($('#nightImg')) $('#nightImg').src = PROPERTY.dayNight.night;
+  }
+
+  // Macros
+  const macroGrid = $('#macroGrid');
+  if (macroGrid && PROPERTY.macros) {
+    macroGrid.innerHTML = '';
+    PROPERTY.macros.forEach((m, i) => {
+      const cell = document.createElement('figure');
+      cell.className = 'macro reveal is-in';
+      cell.style.margin = '0';
+      cell.dataset.d = String(i % 3 + 1);
+      cell.innerHTML = `<img src="${m.poster}" alt="${m.label} detail" loading="lazy" />`;
+      cell.style.setProperty('--z', m.z || 1.8);
+      cell.style.setProperty('--ox', m.ox || '50%');
+      cell.style.setProperty('--oy', m.oy || '50%');
+      cell.insertAdjacentHTML('beforeend', `<figcaption class="macro__label">${m.label}<small>${m.note || ''}</small></figcaption>`);
+      macroGrid.appendChild(cell);
+    });
+  }
+
+  // Dollhouse & Film
+  if (PROPERTY.lifestyle) {
+    const ytId = (PROPERTY.lifestyle.youtubeId || '').trim();
+    $('#filmPoster').src = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : (PROPERTY.lifestyle.poster || '');
+  }
+  if (PROPERTY.matterport && $('#dollhousePoster')) {
+    $('#dollhousePoster').src = PROPERTY.matterport.poster || 'assets/img/dollhouse.jpg';
+  }
+
+  // Agent & Footer
+  if (PROPERTY.agent) {
+    const A = PROPERTY.agent;
+    $('#agentName').textContent = A.name;
+    $('#agentMeta').textContent = A.title;
+    $('#agentPhone').textContent = A.phone;
+    $('#agentPhone').href = `tel:${A.phone.replace(/[^\d+]/g, '')}`;
+    $('#agentEmail').textContent = A.email;
+    $('#agentEmail').href = `mailto:${A.email}`;
+  }
+  if (PROPERTY.scenes && PROPERTY.scenes[2]) {
+    $('#contactImg').src = PROPERTY.scenes[2].poster;
+  }
+  $('#footAddr').textContent = `${PROPERTY.address} · ${PROPERTY.city}`;
+  $('#footMls').textContent = PROPERTY.mls;
+  $('#footBroker').textContent = PROPERTY.broker;
+  $('#year').textContent = new Date().getFullYear();
+
+  layout();
+  render();
+}
+
+/* ==============================================================
+   LAYOUT & SCROLL ENGINE
+   ============================================================== */
+let journeyOffsetTop = 0;
+
+function layout() {
+  vh = innerHeight; unit = vh * 1.5;
+  const journeyEl = $('#journey');
+  if (journeyEl) {
+    journeyEl.style.height = (vh + (N - 1) * unit + vh * 0.9) + 'px';
+    const rect = journeyEl.getBoundingClientRect();
+    journeyOffsetTop = rect.top + scrollY;
+  }
+}
+
+function onScroll() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => { ticking = false; render(); });
+}
+
+function render() {
+  const y = scrollY;
+  const docMax = document.documentElement.scrollHeight - innerHeight;
+  const progressEl = $('#progress');
+  if (progressEl) progressEl.style.transform = `scaleX(${docMax > 0 ? clamp(y / docMax) : 0})`;
+  const navEl = $('#nav');
+  if (navEl) navEl.classList.toggle('is-solid', y > vh * 0.55);
+
+  const journeyEl = $('#journey');
+  if (!journeyEl) return;
+  const u = clamp((y - journeyOffsetTop) / unit, 0, N - 1);
+
+  layers.forEach((L, i) => {
+    const local = u - i;
+    const fadeIn  = i === 0 ? 1 : smoothstep(-1, -0.42, local);
+    const fadeOut = i === N - 1 ? 0 : smoothstep(0.42, 1, local);
+    const op = clamp(fadeIn * (1 - fadeOut));
+    L.el.style.opacity = op;
+    L.el.style.visibility = op < 0.008 ? 'hidden' : 'visible';
+
+    if (!REDUCED) {
+      const scale = 1 + 0.15 * clamp((local + 1) / 2);
+      L.media.style.transform = `translate3d(0,${(local * 3.2).toFixed(2)}%,0) scale(${scale.toFixed(4)})`;
+    }
+
+    const capIn  = i === 0 ? 1 : smoothstep(-0.72, -0.18, local);
+    const capOut = i === N - 1 ? 0 : smoothstep(0.16, 0.62, local);
+    L.caption.style.opacity = clamp(capIn * (1 - capOut));
+    L.caption.style.transform = `translate3d(0,${((1 - capIn) * 34 - capOut * 34).toFixed(2)}px,0)`;
+
+    if (L.heroMeta) {
+      const o = 1 - smoothstep(0, 0.5, local);
+      L.heroMeta.style.opacity = o;
+      L.heroMeta.style.transform = `translate3d(0,${(1 - o) * -18}px,0)`;
+    }
+    if (L.scrollcue) L.scrollcue.style.opacity = 1 - smoothstep(0, 0.22, local);
+  });
+
+  const active = Math.round(u);
+  railItems.forEach((it, i) => it.classList.toggle('is-active', i === active));
+}
+
+/* ==============================================================
+   INTERACTIVE CONTROLS (VIRTUAL STAGING & DAY/NIGHT)
+   ============================================================== */
+function setupStagingSwitcher(toggleContainerId, viewerId) {
+  const container = $(`#${toggleContainerId}`);
+  const viewer = $(`#${viewerId}`);
+  if (!container || !viewer) return;
+
+  const buttons = container.querySelectorAll('.toggle-btn');
+  const images = viewer.querySelectorAll('img');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetVariant = btn.dataset.target;
+      buttons.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      images.forEach(img => {
+        img.classList.toggle('is-active', img.dataset.variant === targetVariant);
+      });
+
+      // Track staging flip
+      try {
+        fetch('/api/analytics/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'staging_toggle', propertyId: PROPERTY.id, variant: targetVariant })
+        });
+      } catch (_) {}
+    });
+  });
+}
+setupStagingSwitcher('livingToggle', 'livingViewer');
+setupStagingSwitcher('backyardToggle', 'backyardViewer');
+
+const dayNightEl = $('#dayNight');
+const isHoverDevice = matchMedia('(hover:hover)').matches;
+function toggleDusk() {
+  const on = dayNightEl.classList.toggle('is-night');
+  $('#dayNightLabel').textContent = on ? 'Dusk' : 'Day';
+}
+dayNightEl.addEventListener('click', toggleDusk);
+dayNightEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDusk(); } });
+if (isHoverDevice) {
+  dayNightEl.addEventListener('mouseenter', () => { $('#dayNightLabel').textContent = 'Dusk'; });
+  dayNightEl.addEventListener('mouseleave', () => {
+    $('#dayNightLabel').textContent = dayNightEl.classList.contains('is-night') ? 'Dusk' : 'Day';
+  });
+}
+
+/* ==============================================================
+   LEAD CAPTURE FORM SUBMISSION
+   ============================================================== */
+const form = $('#tourForm');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  let ok = true;
+  form.querySelectorAll('input[required]').forEach(inp => {
+    const bad = !inp.value.trim() || (inp.type === 'email' && !inp.checkValidity());
+    inp.classList.toggle('is-invalid', bad);
+    if (bad) ok = false;
+  });
+  if (!ok) return;
+
+  const leadPayload = {
+    propertyId: PROPERTY.id,
+    propertyAddress: `${PROPERTY.address}, ${PROPERTY.city}`,
+    name: $('#f-name').value.trim(),
+    email: $('#f-email').value.trim(),
+    phone: $('#f-phone').value.trim(),
+    date: $('#f-date').value,
+    message: $('#f-msg').value.trim(),
+    source: 'Private Tour Form'
+  };
+
+  try {
+    await fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(leadPayload)
+    });
+  } catch (err) {
+    console.error('Failed to post lead', err);
+  }
+
+  $('#formOk').classList.add('is-on');
+  form.reset();
+});
+
+/* ==============================================================
+   AI PROPERTY CONCIERGE (Conversational Assistant)
+   ============================================================== */
+const conciergeTrigger = $('#conciergeTrigger');
+const conciergeModal = $('#conciergeModal');
+const conciergeClose = $('#conciergeClose');
+const conciergeBody = $('#conciergeBody');
+const conciergeForm = $('#conciergeForm');
+const conciergeInput = $('#conciergeInput');
+
+function toggleConcierge() {
+  conciergeModal.classList.toggle('is-open');
+  if (conciergeModal.classList.contains('is-open')) {
+    conciergeInput.focus();
+  }
+}
+conciergeTrigger.addEventListener('click', toggleConcierge);
+conciergeClose.addEventListener('click', toggleConcierge);
+
+function botReply(text) {
+  const msgEl = document.createElement('div');
+  msgEl.className = 'chat-msg chat-msg--bot';
+  msgEl.innerHTML = text;
+  conciergeBody.appendChild(msgEl);
+  conciergeBody.scrollTop = conciergeBody.scrollHeight;
+}
+
+function userSend(text) {
+  const msgEl = document.createElement('div');
+  msgEl.className = 'chat-msg chat-msg--user';
+  msgEl.textContent = text;
+  conciergeBody.appendChild(msgEl);
+
+  // Track event
+  try {
+    fetch('/api/analytics/event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'concierge_query', propertyId: PROPERTY.id, query: text })
+    });
+  } catch (_) {}
+
+  // Match knowledge base
+  const lower = text.toLowerCase();
+  const kb = PROPERTY.knowledge || DEFAULT_PROPERTY.knowledge;
+  let matched = kb.find(item => item.triggers.some(t => lower.includes(t)));
+
+  setTimeout(() => {
+    if (matched) {
+      botReply(matched.response);
+    } else {
+      const agentName = (PROPERTY.agent && PROPERTY.agent.name) || 'Ava Marchetti';
+      const agentPhone = (PROPERTY.agent && PROPERTY.agent.phone) || '(314) 555-0194';
+      botReply(`Thanks for your question! For specific inquiries on <b>${PROPERTY.address}</b>, connect directly with ${agentName} at <b>${agentPhone}</b> or scroll down to schedule an in-person viewing.`);
+    }
+  }, 400);
+
+  conciergeBody.scrollTop = conciergeBody.scrollHeight;
+}
+
+conciergeForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const val = conciergeInput.value.trim();
+  if (!val) return;
+  userSend(val);
+  conciergeInput.value = '';
+});
+
+$$('.chip').forEach(btn => {
+  btn.addEventListener('click', () => { userSend(btn.dataset.q); });
+});
+
+/* Observer & Listeners */
+const revealIO = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); revealIO.unobserve(e.target); } });
+}, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+$$('.reveal').forEach(el => revealIO.observe(el));
+
+addEventListener('scroll', onScroll, { passive: true });
+let rt;
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { layout(); render(); }, 160); });
+const hideLoader = () => $('#loader').classList.add('is-done');
+addEventListener('load', () => { layout(); render(); setTimeout(hideLoader, 700); });
+setTimeout(hideLoader, 3000);
+
+/* ==============================================================
+   SYNCHRONIZE ARCHITECTURAL VIEWPOINT CARDS & SPATIAL ENGINE
+   ============================================================== */
+function setupViewpointSync() {
+  const cards = document.querySelectorAll('.viewpoint-card');
+  if (!cards.length) return;
+
+  const defaultActionLabels = {
+    '6dof': 'Explore Free-Roam',
+    'nodes': 'Tour Key Nodes',
+    'dollhouse': 'Inspect Dollhouse',
+    'floorplan': 'Launch Blueprint'
+  };
+
+  const updateCardStates = (activeMode) => {
+    cards.forEach(card => {
+      const mode = card.dataset.mode;
+      const isActive = mode === activeMode;
+      card.classList.toggle('is-active', isActive);
+      const actionSpan = card.querySelector('.vp-card-action span');
+      if (actionSpan) {
+        if (isActive) {
+          actionSpan.innerHTML = `<span style="color:var(--gold);font-weight:600;">&#9679; ACTIVE VIEWPOINT</span>`;
+        } else {
+          actionSpan.textContent = defaultActionLabels[mode] || 'Activate View';
+        }
+      }
+    });
+  };
+
+  cards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      const mode = card.dataset.mode;
+      updateCardStates(mode);
+
+      // 1. Ensure 3D engine is instantiated
+      if (!window.spatialViewerInstance && typeof window.initSpatialViewer === 'function') {
+        window.initSpatialViewer();
+      }
+
+      // 2. Play audio feedback
+      try {
+        if (window.spatialViewerInstance && window.spatialViewerInstance.audio) {
+          window.spatialViewerInstance.audio.init();
+          window.spatialViewerInstance.audio.playTeleport();
+        }
+      } catch (_) {}
+
+      // 3. Immediately activate mode in 3D engine
+      if (window.spatialViewerInstance && typeof window.spatialViewerInstance.setMode === 'function') {
+        window.spatialViewerInstance.setMode(mode);
+      }
+      const internalButtons = document.querySelectorAll('.spatial-mode-btn');
+      internalButtons.forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.mode === mode);
+      });
+
+      // 4. Immediately scroll directly down to the 3D viewer feature
+      const mount = document.getElementById('spatialViewerMount');
+      if (mount) {
+        const navHeight = 70;
+        const targetY = mount.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
+    });
+
+    // Keyboard accessibility Enter / Space
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+
+  // Listen for internal spatialModeChanged event to update cards
+  window.addEventListener('spatialModeChanged', (e) => {
+    const mode = e.detail && e.detail.mode;
+    if (mode) {
+      updateCardStates(mode);
+    }
+  });
+
+  // Initialize active card state
+  updateCardStates('6dof');
+}
+
+// Kick off initialization
+initEcosystem();
+setupViewpointSync();
+</script>
+</body>
+</html>

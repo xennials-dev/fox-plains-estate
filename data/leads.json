@@ -1,0 +1,69 @@
+{
+  "leads": [
+    {
+      "id": "lead-1791418059672",
+      "propertyId": "fox-plains",
+      "propertyAddress": "15556 Fox Plains Dr",
+      "name": "Sophia Sterling",
+      "email": "sophia@sterlingcapital.com",
+      "phone": "(314) 555-8822",
+      "date": "2026-10-15",
+      "message": "Interested in a private walkthrough this Saturday.",
+      "status": "New",
+      "source": "Private Tour Form",
+      "createdAt": "2026-10-08T00:07:39.672Z"
+    },
+    {
+      "id": "lead-101",
+      "propertyId": "fox-plains",
+      "propertyAddress": "15556 Fox Plains Dr",
+      "name": "David & Claire Sterling",
+      "email": "c.sterling@vanderbilt.edu",
+      "phone": "(314) 892-4410",
+      "date": "2026-10-09",
+      "message": "Interested in private evening walkthrough. Pre-approved with Chase for $275k. Would like to review basement bar and foundation inspection.",
+      "status": "Confirmed",
+      "source": "Private Tour Form",
+      "createdAt": "2026-10-05T15:20:00Z"
+    },
+    {
+      "id": "lead-102",
+      "propertyId": "fox-plains",
+      "propertyAddress": "15556 Fox Plains Dr",
+      "name": "Elena Rostova",
+      "email": "elena.rostova@biotechstl.com",
+      "phone": "(314) 503-8821",
+      "date": "2026-10-11",
+      "message": "Relocating from Chicago for Boeing engineering role. Love the lot size and proximity to Lambert. Can we do Saturday morning?",
+      "status": "New",
+      "source": "Private Tour Form",
+      "createdAt": "2026-10-06T09:42:00Z"
+    },
+    {
+      "id": "lead-103",
+      "propertyId": "fox-plains",
+      "propertyAddress": "15556 Fox Plains Dr",
+      "name": "Marcus Washington",
+      "email": "m.washington@realtypros.org",
+      "phone": "(314) 621-3309",
+      "date": "",
+      "message": "Buyer Client Inquiry: Inquired via AI Concierge about estimated utility costs and Hazelwood Central high school cluster boundary.",
+      "status": "Contacted",
+      "source": "AI Concierge Inquiry",
+      "createdAt": "2026-10-06T11:15:00Z"
+    },
+    {
+      "id": "lead-104",
+      "propertyId": "sterling-crest",
+      "propertyAddress": "4821 Sterling Crest Way",
+      "name": "Dr. Arthur Pendelton",
+      "email": "arthur.pendelton@mercy.net",
+      "phone": "(636) 774-0199",
+      "date": "2026-10-12",
+      "message": "Looking for executive retreat in Chesterfield. Cash buyer, ready to move by month end.",
+      "status": "New",
+      "source": "Private Tour Form",
+      "createdAt": "2026-10-06T12:05:00Z"
+    }
+  ]
+}

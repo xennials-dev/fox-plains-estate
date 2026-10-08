@@ -1,0 +1,305 @@
+{
+  "properties": [
+    {
+      "id": "fox-plains",
+      "brand": "Fox Plains",
+      "address": "15556 Fox Plains Dr",
+      "city": "Florissant, Missouri 63034",
+      "price": "$254,000",
+      "status": "Active",
+      "mls": "MLS# 24058912",
+      "broker": "Marchetti Real Estate Partners",
+      "headline": "A classic brick ranch on a quiet, tree-lined street.",
+      "lede": "Set on a flat 0.20-acre lot in the Fox Plains subdivision, this 3-bedroom home pairs solid 1979 construction with high-demand features: an updated eat-in kitchen, a versatile finished lower level, stamped patio, and an attached two-car garage.",
+      "agent": {
+        "name": "Ava Marchetti",
+        "title": "Senior Listing Partner · MO Lic #20190488",
+        "phone": "(314) 555-0194",
+        "email": "ava@marchettiestates.com"
+      },
+      "specs": [
+        { "k": "Bedrooms", "v": "3" },
+        { "k": "Bathrooms", "v": "2" },
+        { "k": "Interior", "v": "1,300 sq ft" },
+        { "k": "Lower Level", "v": "Finished Rec Rm" },
+        { "k": "Lot Size", "v": "0.20 acres" },
+        { "k": "Garage", "v": "2-car attached" }
+      ],
+      "scenes": [
+        {
+          "id": "orbit",
+          "label": "Aerial Orbit",
+          "kicker": "00 — Aerial Context",
+          "title": "The Neighborhood, From Above",
+          "copy": "An opening high-altitude orbit over Fox Plains. Established trees, quiet drives, and a 0.20-acre level footprint.",
+          "poster": "/assets/img/aerial.jpg",
+          "video": ""
+        },
+        {
+          "id": "fpv",
+          "label": "Flythrough",
+          "kicker": "01 — Continuous FPV",
+          "title": "Driveway to Backyard, One Take",
+          "copy": "From the wide concrete drive, gliding through the front entry, and flowing seamlessly out to the patio.",
+          "poster": "/assets/img/exterior-day.jpg",
+          "video": ""
+        },
+        {
+          "id": "living",
+          "label": "Living Room",
+          "kicker": "02 — The Living Room",
+          "title": "Light Through the Front Window",
+          "copy": "A generous living room with a wide picture window, a painted-brick hearth and warm oak floors.",
+          "poster": "/assets/img/living.jpg",
+          "video": ""
+        },
+        {
+          "id": "kitchen",
+          "label": "Kitchen",
+          "kicker": "03 — The Kitchen",
+          "title": "Eat-In, and Open",
+          "copy": "White shaker cabinetry, quartz counters and a bay-window breakfast nook that looks out over the yard.",
+          "poster": "/assets/img/kitchen.jpg",
+          "video": ""
+        },
+        {
+          "id": "bedroom",
+          "label": "Primary Bedroom",
+          "kicker": "04 — The Primary Bedroom",
+          "title": "Quiet, and Full of Light",
+          "copy": "Three bedrooms on the main level. The primary bedroom faces the garden through two tall windows.",
+          "poster": "/assets/img/bedroom.jpg",
+          "video": ""
+        },
+        {
+          "id": "lower",
+          "label": "Lower Level",
+          "kicker": "05 — The Lower Level",
+          "title": "Room to Grow",
+          "copy": "A finished lower level with a rec room, a wet bar and space for a home office or entertainment suite.",
+          "poster": "/assets/img/lower-level.jpg",
+          "video": ""
+        },
+        {
+          "id": "backyard",
+          "label": "Backyard",
+          "kicker": "06 — The Backyard",
+          "title": "A Level Lot, Fully Fenced",
+          "copy": "A stamped-concrete patio, mature shade trees and a lawn with room for a garden or outdoor kitchen.",
+          "poster": "/assets/img/backyard.jpg",
+          "video": ""
+        },
+        {
+          "id": "dusk",
+          "label": "Evening",
+          "kicker": "07 — Twilight Elevation",
+          "title": "Welcome Home",
+          "copy": "As the street goes quiet, every window glows. Brick, good bones and a place to land.",
+          "poster": "/assets/img/exterior-dusk.jpg",
+          "video": ""
+        }
+      ],
+      "staging": [
+        {
+          "id": "living",
+          "title": "Living Room Transformation",
+          "description": "Switch between vacant presentation and a curated mid-century contemporary layout.",
+          "vacant": "/assets/img/living.jpg",
+          "staged": "/assets/img/living-staged.jpg"
+        },
+        {
+          "id": "backyard",
+          "title": "Patio & Outdoor Oasis",
+          "description": "Visualize summer entertaining with sectional seating and fire-table setup.",
+          "vacant": "/assets/img/backyard.jpg",
+          "staged": "/assets/img/backyard-staged.jpg"
+        }
+      ],
+      "lifestyle": {
+        "youtubeId": "",
+        "poster": "/assets/img/exterior-dusk.jpg"
+      },
+      "dayNight": {
+        "day": "/assets/img/exterior-day.jpg",
+        "night": "/assets/img/exterior-dusk.jpg"
+      },
+      "macros": [
+        { "label": "Shaker Cabinetry", "note": "Kitchen", "poster": "/assets/img/kitchen.jpg", "video": "", "z": 2.2, "ox": "30%", "oy": "55%" },
+        { "label": "Painted Brick Hearth", "note": "Living Room", "poster": "/assets/img/living.jpg", "video": "", "z": 2.4, "ox": "76%", "oy": "52%" },
+        { "label": "Linen & Oak", "note": "Primary", "poster": "/assets/img/bedroom.jpg", "video": "", "z": 2.0, "ox": "45%", "oy": "65%" },
+        { "label": "Bay Window Nook", "note": "Kitchen", "poster": "/assets/img/kitchen.jpg", "video": "", "z": 2.0, "ox": "82%", "oy": "60%" },
+        { "label": "Stamped Patio", "note": "Backyard", "poster": "/assets/img/backyard.jpg", "video": "", "z": 2.0, "ox": "70%", "oy": "70%" },
+        { "label": "Lantern Light", "note": "Front Entry", "poster": "/assets/img/exterior-dusk.jpg", "video": "", "z": 2.6, "ox": "44%", "oy": "60%" }
+      ],
+      "matterport": {
+        "id": "",
+        "poster": "/assets/img/dollhouse.jpg"
+      },
+      "knowledge": [
+        {
+          "triggers": ["utility", "electric", "gas", "water", "cost", "bills", "monthly"],
+          "response": "<b>Estimated Utilities:</b><br>• Electric (Ameren MO): ~$110–$145/mo avg.<br>• Gas (Spire): ~$65–$95/mo avg in winter.<br>• Water/Sewer (Missouri American & MSD): ~$70/mo.<br>• Trash: Florissant municipal services.<br><i>Actual costs vary by personal usage and heating preferences.</i>"
+        },
+        {
+          "triggers": ["1979", "build", "foundation", "roof", "hvac", "basement", "lower", "rec room", "structure", "sq ft", "size"],
+          "response": "<b>Construction & Features:</b><br>• <b>Built in 1979</b> with classic single-story brick veneer and vinyl siding for minimal maintenance.<br>• <b>1,300 sq ft</b> on the main level featuring 3 beds & 2 baths.<br>• <b>Finished Lower Level:</b> Expansive carpeted rec room with built-in wet bar, recessed LED lighting, and dedicated laundry/storage wing.<br>• <b>Garage:</b> 2-car attached garage with direct interior access."
+        },
+        {
+          "triggers": ["school", "park", "parks", "neighborhood", "florissant", "ferdinand", "koch", "district", "area", "location"],
+          "response": "<b>Neighborhood & Locale:</b><br>• <b>School District:</b> Hazelwood School District (Walker Elementary / Hazelwood Central cluster).<br>• <b>Parks:</b> St. Ferdinand Park (4 min, 64 acres with fishing lake) and Koch Park & Aquatic Center (6 min).<br>• <b>Commutes:</b> ~14 min to Boeing campus & St. Louis Lambert Airport, ~25 min to Clayton, ~28 min to Downtown St. Louis via I-270."
+        },
+        {
+          "triggers": ["tour", "showing", "schedule", "appointment", "visit", "book", "see", "agent", "ava"],
+          "response": "I can help you arrange a private viewing with listing partner <b>Ava Marchetti</b>! You can fill out the form at the bottom of the page, or email her directly at <a href='mailto:ava@marchettiestates.com' style='color:var(--gold);text-decoration:underline'>ava@marchettiestates.com</a> / call <a href='tel:3145550194' style='color:var(--gold);text-decoration:underline'>(314) 555-0194</a>."
+        },
+        {
+          "triggers": ["price", "cost", "hoa", "tax", "taxes", "cma", "financing"],
+          "response": "<b>Pricing & Financial Context:</b><br>• <b>Offered Price:</b> $254,000 (anchored to recent sales in Fox Plains).<br>• <b>Estimated Annual Real Estate Taxes:</b> ~$2,600–$2,900/year (St. Louis County).<br>• <b>HOA:</b> No mandatory master association fee in Fox Plains.<br>• Financing: Eligible for Conventional, FHA, and VA loan programs."
+        }
+      ]
+    },
+    {
+      "id": "sterling-crest",
+      "brand": "Sterling Crest",
+      "address": "4821 Sterling Crest Way",
+      "city": "Chesterfield, Missouri 63017",
+      "price": "$689,000",
+      "status": "Active",
+      "mls": "MLS# 24091104",
+      "broker": "Marchetti Real Estate Partners",
+      "headline": "Elevated modern luxury tucked into rolling wooded hills.",
+      "lede": "Architecturally reimagined 4-bedroom estate offering soaring cathedral ceilings, custom waterfall quartz kitchen, sun-drenched walkout terrace, and serene forest views.",
+      "agent": {
+        "name": "Marcus Vance",
+        "title": "Principal Broker · MO Lic #20150912",
+        "phone": "(314) 555-0188",
+        "email": "marcus@marchettiestates.com"
+      },
+      "specs": [
+        { "k": "Bedrooms", "v": "4" },
+        { "k": "Bathrooms", "v": "3.5" },
+        { "k": "Interior", "v": "2,950 sq ft" },
+        { "k": "Walkout Terrace", "v": "Covered Lanai" },
+        { "k": "Lot Size", "v": "0.45 acres" },
+        { "k": "Garage", "v": "3-car tandem" }
+      ],
+      "scenes": [
+        {
+          "id": "orbit",
+          "label": "Aerial Ridge",
+          "kicker": "00 — Topographic Context",
+          "title": "High on the Chesterfield Bluff",
+          "copy": "Panoramic drone canopy over mature hardwoods and rolling St. Louis West County contours.",
+          "poster": "/assets/img/aerial.jpg",
+          "video": ""
+        },
+        {
+          "id": "fpv",
+          "label": "Grand Entry",
+          "kicker": "01 — Continuous FPV",
+          "title": "Double-Height Portico to Great Room",
+          "copy": "Through solid cedar doors into an expanse of natural travertine and oversized floor-to-ceiling glass.",
+          "poster": "/assets/img/exterior-day.jpg",
+          "video": ""
+        },
+        {
+          "id": "living",
+          "label": "Great Room",
+          "kicker": "02 — The Great Room",
+          "title": "Sunlight & Architectural Symmetry",
+          "copy": "Sleek linear fireplace, dual conversational zones, and sightlines directly out to private nature reserve.",
+          "poster": "/assets/img/living.jpg",
+          "video": ""
+        },
+        {
+          "id": "kitchen",
+          "label": "Chef's Galley",
+          "kicker": "03 — Culinary Studio",
+          "title": "Bookmatched Quartz & Concealed Pantry",
+          "copy": "Integrated panel-ready Sub-Zero suites, 48-inch induction range, and prep island with wine cellar.",
+          "poster": "/assets/img/kitchen.jpg",
+          "video": ""
+        },
+        {
+          "id": "bedroom",
+          "label": "Primary Retreat",
+          "kicker": "04 — Primary Wing",
+          "title": "Private Balcony & Spa Bath",
+          "copy": "Freestanding soaking vessel, heated Italian porcelain floors, and dual walk-in boutique closets.",
+          "poster": "/assets/img/bedroom.jpg",
+          "video": ""
+        },
+        {
+          "id": "lower",
+          "label": "Entertainer's Suite",
+          "kicker": "05 — Walkout Lower Level",
+          "title": "Media Lounge & Tasting Room",
+          "copy": "Full-height ceilings, walkout slider to pool patio, and custom wet bar with draft dispenser.",
+          "poster": "/assets/img/lower-level.jpg",
+          "video": ""
+        },
+        {
+          "id": "backyard",
+          "label": "Terrace & Woods",
+          "kicker": "06 — Outdoor Sanctuary",
+          "title": "Private Acreage with Sunset Exposure",
+          "copy": "Tiered bluestone patio with natural gas firepit, outdoor kitchen rough-in, and zero rear neighbors.",
+          "poster": "/assets/img/backyard.jpg",
+          "video": ""
+        },
+        {
+          "id": "dusk",
+          "label": "Evening Illumination",
+          "kicker": "07 — Twilight Ambiance",
+          "title": "Architectural Low-Voltage Glow",
+          "copy": "Landscape accent lighting washes specimen Japanese maples as dusk settles over the Chesterfield ridge.",
+          "poster": "/assets/img/exterior-dusk.jpg",
+          "video": ""
+        }
+      ],
+      "staging": [
+        {
+          "id": "living",
+          "title": "Great Room Staging",
+          "description": "Curated minimalist Scandinavian design highlights natural illumination.",
+          "vacant": "/assets/img/living.jpg",
+          "staged": "/assets/img/living-staged.jpg"
+        },
+        {
+          "id": "backyard",
+          "title": "Entertaining Deck",
+          "description": "Modern outdoor dining setup and fire lounge overlooking the woods.",
+          "vacant": "/assets/img/backyard.jpg",
+          "staged": "/assets/img/backyard-staged.jpg"
+        }
+      ],
+      "lifestyle": {
+        "youtubeId": "",
+        "poster": "/assets/img/exterior-dusk.jpg"
+      },
+      "dayNight": {
+        "day": "/assets/img/exterior-day.jpg",
+        "night": "/assets/img/exterior-dusk.jpg"
+      },
+      "macros": [
+        { "label": "Waterfall Island", "note": "Kitchen", "poster": "/assets/img/kitchen.jpg", "video": "", "z": 2.2, "ox": "30%", "oy": "55%" },
+        { "label": "Linear Hearth", "note": "Great Room", "poster": "/assets/img/living.jpg", "video": "", "z": 2.4, "ox": "76%", "oy": "52%" },
+        { "label": "Oak Flooring", "note": "Primary Suite", "poster": "/assets/img/bedroom.jpg", "video": "", "z": 2.0, "ox": "45%", "oy": "65%" }
+      ],
+      "matterport": {
+        "id": "",
+        "poster": "/assets/img/dollhouse.jpg"
+      },
+      "knowledge": [
+        {
+          "triggers": ["price", "hoa", "taxes", "financing"],
+          "response": "<b>Sterling Crest Financials:</b><br>• <b>Offered Price:</b> $689,000<br>• <b>Taxes:</b> ~$6,200/yr (Rockwood School District)<br>• <b>HOA:</b> $650/annually includes private road maintenance & common ground conservation."
+        },
+        {
+          "triggers": ["school", "schools", "rockwood", "chesterfield"],
+          "response": "<b>School District:</b> Parkway West or Rockwood School District top rating tiers with private academies within 10 minutes."
+        }
+      ]
+    }
+  ]
+}

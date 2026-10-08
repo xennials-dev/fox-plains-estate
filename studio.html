@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Agent Studio — Real Estate Listing Creator & Ingestion Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07080a;
+  --bg-surface: #0e1116;
+  --bg-elevated: #151921;
+  --bg-card: #181d26;
+  --border: rgba(244,241,234,0.09);
+  --border-gold: rgba(201,168,106,0.28);
+  --ink: #f4f1ea;
+  --muted: rgba(244,241,234,0.62);
+  --faint: rgba(244,241,234,0.32);
+  --gold: #c9a86a;
+  --gold-soft: #e6d3a3;
+  --gold-glow: rgba(201,168,106,0.2);
+  --accent-green: #34d399;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Header */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7,8,10,0.88);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0;
+}
+.badge-role {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: rgba(201,168,106,0.12);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-soft);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-surface);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+.nav-tab {
+  padding: 8px 20px;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: all .25s var(--ease);
+}
+.nav-tab.is-active {
+  background: var(--gold);
+  color: #08090b;
+  font-weight: 500;
+}
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  font-family: var(--sans);
+  text-decoration: none;
+}
+.btn-outline {
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: rgba(201,168,106,0.15);
+  border-color: var(--gold);
+}
+.btn-solid {
+  background: var(--gold);
+  color: #08090b;
+  border: 1px solid var(--gold);
+  font-weight: 500;
+}
+.btn-solid:hover {
+  background: var(--gold-soft);
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* Main Container */
+.container {
+  max-width: 1320px;
+  margin: 36px auto 100px;
+  padding: 0 32px;
+}
+
+/* Sections */
+.view-panel {
+  display: none;
+}
+.view-panel.is-active {
+  display: block;
+}
+
+.panel-header {
+  margin-bottom: 32px;
+}
+.panel-eyebrow {
+  font-size: 9px;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 8px;
+}
+.panel-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 300;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+.panel-desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  max-width: 60ch;
+  line-height: 1.7;
+  margin: 10px 0 0;
+}
+
+/* Layout Grid */
+.grid-cols {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 960px) {
+  .grid-cols { grid-template-columns: 1fr; }
+}
+
+/* Glass Card */
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px;
+  margin-bottom: 28px;
+  position: relative;
+}
+.card-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 0 16px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: -8px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Forms */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label {
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field input, .field select, .field textarea {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--ink);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-family: var(--sans);
+  transition: border-color .3s, box-shadow .3s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,168,106,0.18);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+/* AI Generator Box */
+.ai-banner {
+  background: linear-gradient(135deg, rgba(201,168,106,0.12), rgba(14,17,22,0.8));
+  border: 1px solid var(--border-gold);
+  border-radius: 6px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.ai-banner-text p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--gold-soft);
+}
+.ai-banner-text small {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+/* Media Dropzones */
+.dropzone {
+  border: 1.5px dashed var(--border-gold);
+  background: rgba(21,25,33,0.5);
+  border-radius: 6px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.dropzone:hover, .dropzone.dragover {
+  background: rgba(201,168,106,0.06);
+  border-color: var(--gold);
+}
+.dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.dropzone-icon {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 10px;
+  color: var(--gold);
+}
+.dropzone-text {
+  font-size: 12px;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.dropzone-hint {
+  font-size: 10px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Scene Cards Grid */
+.scenes-editor {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.scene-item-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.scene-preview-box {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+.scene-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.scene-badge-index {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0,0,0,0.7);
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.scene-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.scene-input {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  color: var(--ink);
+  font-size: 11.5px;
+}
+
+/* Staging Pair Box */
+.staging-pair-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .staging-pair-grid { grid-template-columns: 1fr; }
+}
+
+/* Inventory List */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+.inv-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform .3s, border-color .3s;
+}
+.inv-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-gold);
+}
+.inv-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+}
+.inv-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.inv-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: rgba(52,211,153,0.2);
+  border: 1px solid rgba(52,211,153,0.4);
+  color: var(--accent-green);
+}
+.inv-price {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--gold-soft);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+.inv-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.inv-addr {
+  font-family: var(--serif);
+  font-size: 18px;
+  margin: 0;
+  color: var(--ink);
+}
+.inv-meta {
+  font-size: 11.5px;
+  color: var(--muted);
+  display: flex;
+  gap: 16px;
+}
+.inv-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  background: var(--bg-elevated);
+  border: 1px solid var(--gold);
+  color: var(--ink);
+  padding: 14px 22px;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all .35s var(--ease);
+  pointer-events: none;
+}
+.toast.is-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<header class="topbar">
+  <div class="brand-group">
+    <h1 class="brand-title">ESTATESPHERE</h1>
+    <span class="badge-role">Agent Studio</span>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="nav-tab is-active" id="tabUploadBtn" onclick="switchTab('upload')">Create / Ingest</button>
+    <button class="nav-tab" id="tabInventoryBtn" onclick="switchTab('inventory')">Active Inventory</button>
+  </nav>
+
+  <div class="top-actions">
+    <a href="/analytics" class="btn btn-outline">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Analytics & Leads
+    </a>
+    <a href="/" target="_blank" class="btn btn-solid" id="previewBtn">
+      View Buyer Tour ↗
+    </a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ==============================================================
+       VIEW 1: LISTING CREATOR & MEDIA INGESTION
+       ============================================================== -->
+  <div class="view-panel is-active" id="viewUpload">
+    <div class="panel-header">
+      <p class="panel-eyebrow">Listing Ingestion Engine</p>
+      <h2 class="panel-title">Upload & Architect New Property</h2>
+      <p class="panel-desc">Assemble a high-converting, cinematic microsite in minutes. Upload 4K drone footage, room captures, virtual staging pairs, and fine-tune your dedicated AI Property Concierge.</p>
+    </div>
+
+    <form id="propertyForm" onsubmit="saveProperty(event)">
+      <div class="grid-cols">
+        <!-- Main Column -->
+        <div>
+          <!-- Core Specs -->
+          <div class="glass-card">
+            <h3 class="card-title">1. Essential Property Parameters</h3>
+            <p class="card-subtitle">Foundational MLS and tax data used across the buyer experience and search indexing.</p>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Listing Title / Brand</label>
+                <input type="text" id="p-brand" placeholder="e.g. Fox Plains Estate" required />
+              </div>
+              <div class="field">
+                <label>Price</label>
+                <input type="text" id="p-price" placeholder="e.g. $254,000" required />
+              </div>
+              <div class="field">
+                <label>MLS #</label>
+                <input type="text" id="p-mls" placeholder="e.g. MLS# 24058912" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Street Address</label>
+                <input type="text" id="p-address" placeholder="e.g. 15556 Fox Plains Dr" required />
+              </div>
+              <div class="field">
+                <label>City, State & Zip</label>
+                <input type="text" id="p-city" placeholder="e.g. Florissant, Missouri 63034" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Bedrooms</label>
+                <input type="text" id="p-beds" placeholder="3" value="3" />
+              </div>
+              <div class="field">
+                <label>Bathrooms</label>
+                <input type="text" id="p-baths" placeholder="2" value="2" />
+              </div>
+              <div class="field">
+                <label>Interior Sq Ft</label>
+                <input type="text" id="p-sqft" placeholder="1,300 sq ft" value="1,300 sq ft" />
+              </div>
+              <div class="field">
+                <label>Lot Size</label>
+                <input type="text" id="p-lot" placeholder="0.20 acres" value="0.20 acres" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Lower Level</label>
+                <input type="text" id="p-lower" placeholder="Finished Rec Rm" value="Finished Rec Rm" />
+              </div>
+              <div class="field">
+                <label>Garage</label>
+                <input type="text" id="p-garage" placeholder="2-car attached" value="2-car attached" />
+              </div>
+              <div class="field">
+                <label>Listing Status</label>
+                <select id="p-status">
+                  <option value="Active">Active</option>
+                  <option value="Coming Soon">Coming Soon</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Sold">Sold</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Copywriting Generator -->
+          <div class="glass-card">
+            <h3 class="card-title">
+              <span>2. Editorial Narrative & Storytelling</span>
+              <button type="button" class="btn btn-outline" onclick="generateAICopy()" style="padding:6px 14px; font-size:9px;">
+                ✨ AI Generate Narrative
+              </button>
+            </h3>
+            <p class="card-subtitle">Elevated editorial prose displayed in the hero section and luxury overview.</p>
+
+            <div class="ai-banner">
+              <div class="ai-banner-text">
+                <p>AI Real Estate Copywriter Ready</p>
+                <small>Generates high-engagement luxury prose tuned to your bedrooms, neighborhood, and architectural profile.</small>
+              </div>
+              <button type="button" class="btn btn-solid" onclick="generateAICopy()" style="font-size:9px; padding:8px 16px;">Run Copywriter</button>
+            </div>
+
+            <div class="field" style="margin-bottom:16px;">
+              <label>Editorial Headline</label>
+              <input type="text" id="p-headline" placeholder="A classic brick ranch on a quiet, tree-lined street." required />
+            </div>
+
+            <div class="field">
+              <label>Narrative Lede</label>
+              <textarea id="p-lede" placeholder="Full descriptive paragraph crafted for luxury buyers..." required></textarea>
+            </div>
+          </div>
+
+          <!-- 8-Scene Cinematic Scroll Journey -->
+          <div class="glass-card">
+            <h3 class="card-title">3. Cinematic 8-Scene Scroll Journey</h3>
+            <p class="card-subtitle">The signature scroll-driven film. Buyers experience these rooms in fluid progression. Drag-and-drop or select new media for any scene.</p>
+
+            <div class="scenes-editor" id="scenesEditor">
+              <!-- Dynamically rendered scene items -->
+            </div>
+          </div>
+
+          <!-- Virtual Staging Transformation -->
+          <div class="glass-card">
+            <h3 class="card-title">4. Before / After Virtual Staging Pairs</h3>
+            <p class="card-subtitle">Allows buyers to interactively toggle between vacant property shots and professionally staged interiors.</p>
+
+            <div class="staging-pair-grid">
+              <div class="field">
+                <label>Living Room: Vacant Image</label>
+                <div class="dropzone" id="dz-living-vacant">
+                  <input type="file" accept="image/*" onchange="handleFileUpload(this, 'living-vacant')" />
+                  <div class="dropzone-text">Drop Vacant Living Photo</div>
+                  <div class="dropzone-hint" id="hint-living-vacant">Currently: /assets/img/living.jpg</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Living Room: Virtually Staged Image</label>
+                <div class="dropzone" id="dz-living-staged">
+                  <input type="file" accept="image/*" onchange="handleFileUpload(this, 'living-staged')" />
+                  <div class="dropzone-text">Drop Staged Living Photo</div>
+                  <div class="dropzone-hint" id="hint-living-staged">Currently: /assets/img/living-staged.jpg</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="staging-pair-grid" style="margin-top:16px;">
+              <div class="field">
+                <label>Backyard: Vacant / Unfurnished</label>
+                <div class="dropzone" id="dz-backyard-vacant">
+                  <input type="file" accept="image/*" onchange="handleFileUpload(this, 'backyard-vacant')" />
+                  <div class="dropzone-text">Drop Vacant Patio Photo</div>
+                  <div class="dropzone-hint" id="hint-backyard-vacant">Currently: /assets/img/backyard.jpg</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Backyard: Staged Outdoor Living</label>
+                <div class="dropzone" id="dz-backyard-staged">
+                  <input type="file" accept="image/*" onchange="handleFileUpload(this, 'backyard-staged')" />
+                  <div class="dropzone-text">Drop Staged Patio Photo</div>
+                  <div class="dropzone-hint" id="hint-backyard-staged">Currently: /assets/img/backyard-staged.jpg</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Day to Dusk Elevation -->
+          <div class="glass-card">
+            <h3 class="card-title">5. Day-to-Dusk Lighting Elevation</h3>
+            <p class="card-subtitle">Interactive twilight toggle that renders the exterior facade under warm evening lighting.</p>
+
+            <div class="staging-pair-grid">
+              <div class="field">
+                <label>Daylight Facade</label>
+                <div class="dropzone" id="dz-day">
+                  <input type="file" accept="image/*" onchange="handleFileUpload(this, 'day')" />
+                  <div class="dropzone-text">Drop Daylight Photo</div>
+                  <div class="dropzone-hint" id="hint-day">/assets/img/exterior-day.jpg</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Dusk Facade (Illuminated)</label>
+                <div class="dropzone" id="dz-night">
+                  <input type="file" accept="image/*" onchange="handleFileUpload(this, 'night')" />
+                  <div class="dropzone-text">Drop Twilight Photo</div>
+                  <div class="dropzone-hint" id="hint-night">/assets/img/exterior-dusk.jpg</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div>
+          <!-- Agent Contact & Brokerage -->
+          <div class="glass-card">
+            <h3 class="card-title">Agent Representation</h3>
+            <p class="card-subtitle">Direct contact info shown to interested buyers.</p>
+
+            <div class="field" style="margin-bottom:12px;">
+              <label>Agent Name</label>
+              <input type="text" id="a-name" value="Ava Marchetti" required />
+            </div>
+            <div class="field" style="margin-bottom:12px;">
+              <label>Title & License</label>
+              <input type="text" id="a-title" value="Senior Listing Partner · MO Lic #20190488" />
+            </div>
+            <div class="field" style="margin-bottom:12px;">
+              <label>Phone Number</label>
+              <input type="tel" id="a-phone" value="(314) 555-0194" />
+            </div>
+            <div class="field" style="margin-bottom:12px;">
+              <label>Direct Email</label>
+              <input type="email" id="a-email" value="ava@marchettiestates.com" required />
+            </div>
+            <div class="field">
+              <label>Brokerage Name</label>
+              <input type="text" id="p-broker" value="Marchetti Real Estate Partners" />
+            </div>
+          </div>
+
+          <!-- 3D Matterport & Video Tours -->
+          <div class="glass-card">
+            <h3 class="card-title">Virtual 3D & Video Models</h3>
+            <p class="card-subtitle">Matterport dollhouse and YouTube lifestyle reel.</p>
+
+            <div class="field" style="margin-bottom:14px;">
+              <label>Matterport Space ID / URL</label>
+              <input type="text" id="p-matterport" placeholder="e.g. sxuVkrMWlhP" />
+            </div>
+            <div class="field">
+              <label>YouTube Lifestyle Video ID</label>
+              <input type="text" id="p-youtube" placeholder="e.g. dQw4w9WgXcQ" />
+            </div>
+          </div>
+
+          <!-- AI Concierge Knowledge Customizer -->
+          <div class="glass-card">
+            <h3 class="card-title">AI Concierge Knowledge Base</h3>
+            <p class="card-subtitle">Customize the facts your AI assistant uses when fielding prospective buyer inquiries.</p>
+
+            <div class="field" style="margin-bottom:12px;">
+              <label>Monthly Utilities Guidance</label>
+              <textarea id="kb-utilities" style="font-size:11.5px; height:70px;">Ameren MO electric ~$125/mo avg. Spire gas ~$80/mo winter. Water/sewer ~$70/mo.</textarea>
+            </div>
+            <div class="field" style="margin-bottom:12px;">
+              <label>Schools & District</label>
+              <textarea id="kb-schools" style="font-size:11.5px; height:70px;">Hazelwood School District: Walker Elementary & Hazelwood Central High cluster.</textarea>
+            </div>
+            <div class="field">
+              <label>Taxes & HOA Fees</label>
+              <textarea id="kb-taxes" style="font-size:11.5px; height:70px;">Annual St. Louis County taxes ~$2,750/yr. No mandatory master HOA fees.</textarea>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="glass-card" style="border-color:var(--border-gold); background:rgba(201,168,106,0.04);">
+            <button type="submit" class="btn btn-solid" style="width:100%; justify-content:center; padding:14px;">
+              💾 Save & Publish Listing
+            </button>
+            <p style="font-size:10px; text-align:center; color:var(--muted); margin:10px 0 0;">
+              Changes sync instantly to the public buyer microsite.
+            </p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ==============================================================
+       VIEW 2: ACTIVE INVENTORY
+       ============================================================== -->
+  <div class="view-panel" id="viewInventory">
+    <div class="panel-header">
+      <p class="panel-eyebrow">Listing Portfolio</p>
+      <h2 class="panel-title">Active Brokerage Properties</h2>
+      <p class="panel-desc">Manage all active and pending microsites across your team. Edit property parameters or launch live buyer presentation links.</p>
+    </div>
+
+    <div class="inventory-grid" id="inventoryGrid">
+      <!-- Dynamically populated from /api/properties -->
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Listing updated successfully!</span>
+</div>
+
+<script>
+let currentProperty = null;
+let allProperties = [];
+
+// Staging image URLs state
+const uploadsMap = {
+  'living-vacant': '/assets/img/living.jpg',
+  'living-staged': '/assets/img/living-staged.jpg',
+  'backyard-vacant': '/assets/img/backyard.jpg',
+  'backyard-staged': '/assets/img/backyard-staged.jpg',
+  'day': '/assets/img/exterior-day.jpg',
+  'night': '/assets/img/exterior-dusk.jpg'
+};
+
+const defaultScenes = [
+  { id: "orbit", label: "Aerial Orbit", kicker: "00 — Aerial Context", title: "The Neighborhood, From Above", copy: "An opening high-altitude orbit over Fox Plains. Established trees, quiet drives, and a 0.20-acre level footprint.", poster: "/assets/img/aerial.jpg" },
+  { id: "fpv", label: "Flythrough", kicker: "01 — Continuous FPV", title: "Driveway to Backyard, One Take", copy: "From the wide concrete drive, gliding through the front entry, and flowing seamlessly out to the patio.", poster: "/assets/img/exterior-day.jpg" },
+  { id: "living", label: "Living Room", kicker: "02 — The Living Room", title: "Light Through the Front Window", copy: "A generous living room with a wide picture window, a painted-brick hearth and warm oak floors.", poster: "/assets/img/living.jpg" },
+  { id: "kitchen", label: "Kitchen", kicker: "03 — The Kitchen", title: "Eat-In, and Open", copy: "White shaker cabinetry, quartz counters and a bay-window breakfast nook that looks out over the yard.", poster: "/assets/img/kitchen.jpg" },
+  { id: "bedroom", label: "Primary Bedroom", kicker: "04 — The Primary Bedroom", title: "Quiet, and Full of Light", copy: "Three bedrooms on the main level. The primary bedroom faces the garden through two tall windows.", poster: "/assets/img/bedroom.jpg" },
+  { id: "lower", label: "Lower Level", kicker: "05 — The Lower Level", title: "Room to Grow", copy: "A finished lower level with a rec room, a wet bar and space for a home office or entertainment suite.", poster: "/assets/img/lower-level.jpg" },
+  { id: "backyard", label: "Backyard", kicker: "06 — The Backyard", title: "A Level Lot, Fully Fenced", copy: "A stamped-concrete patio, mature shade trees and a lawn with room for a garden or outdoor kitchen.", poster: "/assets/img/backyard.jpg" },
+  { id: "dusk", label: "Evening", kicker: "07 — Twilight Elevation", title: "Welcome Home", copy: "As the street goes quiet, every window glows. Brick, good bones and a place to land.", poster: "/assets/img/exterior-dusk.jpg" }
+];
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('is-show');
+  setTimeout(() => t.classList.remove('is-show'), 3200);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('is-active'));
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('is-active'));
+
+  if (tab === 'upload') {
+    document.getElementById('tabUploadBtn').classList.add('is-active');
+    document.getElementById('viewUpload').classList.add('is-active');
+  } else {
+    document.getElementById('tabInventoryBtn').classList.add('is-active');
+    document.getElementById('viewInventory').classList.add('is-active');
+    loadInventory();
+  }
+}
+
+// Load property into form
+async function loadProperty(id = 'fox-plains') {
+  try {
+    const res = await fetch(`/api/properties/${id}`);
+    const data = await res.json();
+    if (!data.success) return;
+
+    currentProperty = data.property;
+
+    // Set preview button href
+    document.getElementById('previewBtn').href = `/?id=${currentProperty.id}`;
+
+    // Fill form
+    document.getElementById('p-brand').value = currentProperty.brand || '';
+    document.getElementById('p-price').value = currentProperty.price || '';
+    document.getElementById('p-mls').value = currentProperty.mls || '';
+    document.getElementById('p-address').value = currentProperty.address || '';
+    document.getElementById('p-city').value = currentProperty.city || '';
+    document.getElementById('p-status').value = currentProperty.status || 'Active';
+
+    // Specs
+    const specs = currentProperty.specs || [];
+    specs.forEach(s => {
+      if (s.k.includes('Bed')) document.getElementById('p-beds').value = s.v;
+      if (s.k.includes('Bath')) document.getElementById('p-baths').value = s.v;
+      if (s.k.includes('Interior')) document.getElementById('p-sqft').value = s.v;
+      if (s.k.includes('Lot')) document.getElementById('p-lot').value = s.v;
+      if (s.k.includes('Lower')) document.getElementById('p-lower').value = s.v;
+      if (s.k.includes('Garage')) document.getElementById('p-garage').value = s.v;
+    });
+
+    // Narrative
+    document.getElementById('p-headline').value = currentProperty.headline || '';
+    document.getElementById('p-lede').value = currentProperty.lede || '';
+
+    // Agent
+    if (currentProperty.agent) {
+      document.getElementById('a-name').value = currentProperty.agent.name || '';
+      document.getElementById('a-title').value = currentProperty.agent.title || '';
+      document.getElementById('a-phone').value = currentProperty.agent.phone || '';
+      document.getElementById('a-email').value = currentProperty.agent.email || '';
+    }
+    document.getElementById('p-broker').value = currentProperty.broker || '';
+
+    // 3D & Lifestyle
+    document.getElementById('p-matterport').value = (currentProperty.matterport && currentProperty.matterport.id) || '';
+    document.getElementById('p-youtube').value = (currentProperty.lifestyle && currentProperty.lifestyle.youtubeId) || '';
+
+    // Render scenes editor
+    renderScenesEditor(currentProperty.scenes || defaultScenes);
+
+  } catch (err) {
+    console.error('Error loading property:', err);
+  }
+}
+
+function renderScenesEditor(scenes) {
+  const container = document.getElementById('scenesEditor');
+  container.innerHTML = '';
+
+  scenes.forEach((s, idx) => {
+    const card = document.createElement('div');
+    card.className = 'scene-item-card';
+    card.innerHTML = `
+      <div class="scene-preview-box">
+        <img id="scene-img-${idx}" src="${s.poster}" alt="${s.title}" />
+        <span class="scene-badge-index">${idx + 1}. ${s.label}</span>
+      </div>
+      <div class="scene-body">
+        <input type="text" class="scene-input" id="scene-title-${idx}" value="${s.title}" placeholder="Scene Title" />
+        <textarea class="scene-input" id="scene-copy-${idx}" rows="2" placeholder="Scene Copy">${s.copy}</textarea>
+        <div class="dropzone" style="padding:10px; margin-top:4px;">
+          <input type="file" accept="image/*,video/*" onchange="uploadSceneMedia(this, ${idx})" />
+          <span style="font-size:10px; color:var(--gold);">Change Image / Video</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Media Upload Handler
+async function handleFileUpload(input, targetKey) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const formData = new FormData();
+  formData.append('media', file);
+
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.success) {
+      uploadsMap[targetKey] = data.url;
+      const hint = document.getElementById(`hint-${targetKey}`);
+      if (hint) hint.textContent = `Uploaded: ${data.url}`;
+      showToast(`File uploaded: ${file.name}`);
+    }
+  } catch (err) {
+    console.error('Upload failed', err);
+    alert('File upload failed.');
+  }
+}
+
+async function uploadSceneMedia(input, sceneIdx) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const formData = new FormData();
+  formData.append('media', file);
+
+  try {
+    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.success) {
+      const img = document.getElementById(`scene-img-${sceneIdx}`);
+      if (img) img.src = data.url;
+      if (currentProperty && currentProperty.scenes && currentProperty.scenes[sceneIdx]) {
+        currentProperty.scenes[sceneIdx].poster = data.url;
+      }
+      showToast(`Scene ${sceneIdx + 1} updated!`);
+    }
+  } catch (err) {
+    console.error('Upload failed', err);
+  }
+}
+
+// AI Copy Generator
+function generateAICopy() {
+  const brand = document.getElementById('p-brand').value || 'The Estate';
+  const beds = document.getElementById('p-beds').value || '3';
+  const baths = document.getElementById('p-baths').value || '2';
+  const sqft = document.getElementById('p-sqft').value || '2,400 sq ft';
+  const city = document.getElementById('p-city').value || 'Florissant, Missouri';
+
+  const headline = `A distinguished sanctuary designed for effortless indoor-outdoor living.`;
+  const lede = `Set within ${city}, this impeccably composed residence pairs timeless architectural character with thoughtful modern appointments. Offering ${beds} generously proportioned bedrooms, ${baths} spa baths, and ${sqft} of fluid living area, the home opens onto private manicured grounds tailored for year-round entertaining.`;
+
+  document.getElementById('p-headline').value = headline;
+  document.getElementById('p-lede').value = lede;
+  showToast("✨ AI luxury narrative generated!");
+}
+
+// Save Property
+async function saveProperty(e) {
+  e.preventDefault();
+
+  const scenes = [];
+  const sceneItems = document.querySelectorAll('.scene-item-card');
+  sceneItems.forEach((card, idx) => {
+    const orig = (currentProperty && currentProperty.scenes && currentProperty.scenes[idx]) || defaultScenes[idx];
+    scenes.push({
+      ...orig,
+      title: document.getElementById(`scene-title-${idx}`).value,
+      copy: document.getElementById(`scene-copy-${idx}`).value,
+      poster: document.getElementById(`scene-img-${idx}`).src
+    });
+  });
+
+  const propertyPayload = {
+    id: currentProperty ? currentProperty.id : 'fox-plains',
+    brand: document.getElementById('p-brand').value,
+    address: document.getElementById('p-address').value,
+    city: document.getElementById('p-city').value,
+    price: document.getElementById('p-price').value,
+    mls: document.getElementById('p-mls').value,
+    status: document.getElementById('p-status').value,
+    broker: document.getElementById('p-broker').value,
+    headline: document.getElementById('p-headline').value,
+    lede: document.getElementById('p-lede').value,
+    agent: {
+      name: document.getElementById('a-name').value,
+      title: document.getElementById('a-title').value,
+      phone: document.getElementById('a-phone').value,
+      email: document.getElementById('a-email').value
+    },
+    specs: [
+      { k: "Bedrooms", v: document.getElementById('p-beds').value },
+      { k: "Bathrooms", v: document.getElementById('p-baths').value },
+      { k: "Interior", v: document.getElementById('p-sqft').value },
+      { k: "Lower Level", v: document.getElementById('p-lower').value },
+      { k: "Lot Size", v: document.getElementById('p-lot').value },
+      { k: "Garage", v: document.getElementById('p-garage').value }
+    ],
+    scenes: scenes,
+    staging: [
+      {
+        id: "living",
+        title: "Living Room Transformation",
+        description: "Switch between vacant presentation and a curated mid-century contemporary layout.",
+        vacant: uploadsMap['living-vacant'],
+        staged: uploadsMap['living-staged']
+      },
+      {
+        id: "backyard",
+        title: "Patio & Outdoor Oasis",
+        description: "Visualize summer entertaining with sectional seating and fire-table setup.",
+        vacant: uploadsMap['backyard-vacant'],
+        staged: uploadsMap['backyard-staged']
+      }
+    ],
+    dayNight: {
+      day: uploadsMap['day'],
+      night: uploadsMap['night']
+    },
+    lifestyle: {
+      youtubeId: document.getElementById('p-youtube').value,
+      poster: uploadsMap['night']
+    },
+    matterport: {
+      id: document.getElementById('p-matterport').value,
+      poster: "/assets/img/dollhouse.jpg"
+    },
+    knowledge: [
+      {
+        triggers: ["utility", "electric", "gas", "water", "cost", "bills"],
+        response: document.getElementById('kb-utilities').value
+      },
+      {
+        triggers: ["school", "schools", "district"],
+        response: document.getElementById('kb-schools').value
+      },
+      {
+        triggers: ["tax", "taxes", "hoa", "price"],
+        response: document.getElementById('kb-taxes').value
+      }
+    ]
+  };
+
+  try {
+    const res = await fetch('/api/properties', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(propertyPayload)
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast("Listing saved & deployed successfully!");
+      document.getElementById('previewBtn').href = `/?id=${propertyPayload.id}`;
+    }
+  } catch (err) {
+    console.error('Failed to save property', err);
+    alert('Failed to save property.');
+  }
+}
+
+// Load Inventory Grid
+async function loadInventory() {
+  try {
+    const res = await fetch('/api/properties');
+    const data = await res.json();
+    if (!data.success) return;
+
+    allProperties = data.properties;
+    const grid = document.getElementById('inventoryGrid');
+    grid.innerHTML = '';
+
+    allProperties.forEach(p => {
+      const heroImg = (p.scenes && p.scenes[0] && p.scenes[0].poster) || '/assets/img/aerial.jpg';
+      const card = document.createElement('div');
+      card.className = 'inv-card';
+      card.innerHTML = `
+        <div class="inv-thumb">
+          <img src="${heroImg}" alt="${p.brand}" />
+          <span class="inv-status">${p.status || 'Active'}</span>
+          <span class="inv-price">${p.price}</span>
+        </div>
+        <div class="inv-content">
+          <h4 class="inv-addr">${p.brand || p.address}</h4>
+          <p style="font-size:12px; color:var(--muted); margin:0;">${p.address}, ${p.city}</p>
+          <div class="inv-meta">
+            <span>🛏️ ${p.specs ? p.specs[0].v : '3'} Beds</span>
+            <span>🛁 ${p.specs ? p.specs[1].v : '2'} Baths</span>
+            <span>📐 ${p.specs ? p.specs[2].v : '1,300 sq ft'}</span>
+          </div>
+          <div class="inv-actions">
+            <button class="btn btn-outline" style="font-size:9px; padding:6px 14px;" onclick="selectPropertyToEdit('${p.id}')">Edit in Studio</button>
+            <a href="/?id=${p.id}" target="_blank" class="btn btn-solid" style="font-size:9px; padding:6px 14px;">View Live Tour ↗</a>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  } catch (err) {
+    console.error('Failed to load inventory', err);
+  }
+}
+
+function selectPropertyToEdit(id) {
+  loadProperty(id);
+  switchTab('upload');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initial Boot
+loadProperty('fox-plains');
+</script>
+</body>
+</html>
