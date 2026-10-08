@@ -22,6 +22,36 @@
     {
       "type": "drone_launch",
       "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T14:24:13.064Z"
+    },
+    {
+      "type": "6dof_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T14:24:05.167Z"
+    },
+    {
+      "type": "nodes_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T14:24:03.267Z"
+    },
+    {
+      "type": "dollhouse_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T14:24:00.892Z"
+    },
+    {
+      "type": "floorplan_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T14:23:56.603Z"
+    },
+    {
+      "type": "drone_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T14:23:51.940Z"
+    },
+    {
+      "type": "drone_launch",
+      "propertyId": "fox-plains",
       "timestamp": "2026-10-08T13:52:15.088Z"
     },
     {
@@ -238,36 +268,6 @@
       "type": "dollhouse_launch",
       "propertyId": "fox-plains",
       "timestamp": "2026-10-08T02:31:19.658Z"
-    },
-    {
-      "type": "nodes_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:31:18.998Z"
-    },
-    {
-      "type": "nodes_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:31:18.807Z"
-    },
-    {
-      "type": "nodes_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:31:16.813Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:30:46.732Z"
-    },
-    {
-      "type": "6dof_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:30:46.483Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:30:35.262Z"
     }
   ]
 }

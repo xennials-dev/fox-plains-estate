@@ -77,9 +77,16 @@ app.get('/studio.html', (req, res) => res.sendFile('studio.html', { root: __dirn
 app.get('/analytics', (req, res) => res.sendFile('analytics.html', { root: __dirname }));
 app.get('/analytics.html', (req, res) => res.sendFile('analytics.html', { root: __dirname }));
 const DRONE_DIR = path.join(__dirname, 'drone');
-app.use('/drone', express.static(DRONE_DIR));
-app.get('/drone', (req, res) => res.sendFile('index.html', { root: DRONE_DIR }));
-app.get('/drone/index.html', (req, res) => res.sendFile('index.html', { root: DRONE_DIR }));
+app.use('/drone', express.static(DRONE_DIR, staticOptions));
+app.get('/drone', (req, res) => res.redirect(301, '/drone/'));
+app.get('/drone/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.sendFile('index.html', { root: DRONE_DIR });
+});
+app.get('/drone/index.html', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.sendFile('index.html', { root: DRONE_DIR });
+});
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({
@@ -155,20 +162,23 @@ async function dispatchLeadNotification(lead) {
     `<b>Notes:</b> ${lead.message || 'None'}\n` +
     `<b>Source:</b> ${lead.source}`;
 
-  // 1. Dispatch to Xennials Platform API if online
-  try {
-    fetch('http://localhost:5000/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: lead.name,
-        email: lead.email,
-        company: lead.propertyAddress,
-        budget: '$254,000 Listing Inquiry',
-        message: `[Private Tour Booking - ${lead.date}]: ${lead.message || 'No additional notes'} (Phone: ${lead.phone})`
-      })
-    }).catch(() => {});
-  } catch (_) {}
+  // 1. Dispatch to CRM Webhook if configured
+  const webhookUrl = process.env.CRM_WEBHOOK_URL;
+  if (webhookUrl) {
+    try {
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: lead.name,
+          email: lead.email,
+          company: lead.propertyAddress,
+          budget: '$254,000 Listing Inquiry',
+          message: `[Private Tour Booking - ${lead.date}]: ${lead.message || 'No additional notes'} (Phone: ${lead.phone})`
+        })
+      }).catch(() => {});
+    } catch (_) {}
+  }
 
   console.log(`[Lead Alert]: ${lead.name} booked tour for ${lead.propertyAddress}`);
 }
@@ -324,6 +334,18 @@ app.post('/api/analytics/event', (req, res) => {
 
   analyticsDirty = true;
   res.json({ success: true });
+});
+
+// System Health Check Endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString(),
+    droneView: true,
+    spatial3D: true,
+    agentStudio: true
+  });
 });
 
 // Express Error-Handling Middleware (Catches bad JSON, payload issues, unhandled route errors)

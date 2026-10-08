@@ -215,15 +215,15 @@
                   <span class="drone-sub-pill">Spline Route · Exact Interior Overlays</span>
                 </div>
                 <div class="drone-bar-actions">
-                  <a href="http://localhost:5173/" target="_blank" rel="noopener" class="drone-popout-btn" title="Open Drone View in Dedicated Tab">
-                    <span>Standalone (5173) ↗</span>
+                  <a href="/drone/" target="_blank" rel="noopener" class="drone-popout-btn" title="Open Drone View in Dedicated Tab">
+                    <span>Standalone ↗</span>
                   </a>
                   <button type="button" class="drone-close-btn" id="btnExitDrone" title="Switch back to 6DoF Free-Roam">
                     <span>Exit Drone ✕</span>
                   </button>
                 </div>
               </div>
-              <iframe id="spatialDroneIframe" class="drone-iframe" src="http://localhost:5173/" allow="autoplay; accelerometer; gyroscope"></iframe>
+              <iframe id="spatialDroneIframe" class="drone-iframe" src="/drone/" allow="autoplay; accelerometer; gyroscope"></iframe>
             </div>
 
             <!-- 6DOF RETICLE & PROMPT -->
@@ -1493,10 +1493,8 @@
         if (mobEl) mobEl.style.display = 'none';
 
         if (droneIframe) {
-          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const targetDroneSrc = isLocal ? 'http://localhost:5173/' : '/drone/';
-          if (!droneIframe.src || droneIframe.src === 'about:blank' || (isLocal && !droneIframe.src.startsWith('http://localhost:5173/'))) {
-            droneIframe.src = targetDroneSrc;
+          if (!droneIframe.src || droneIframe.src === 'about:blank' || !droneIframe.src.includes('/drone')) {
+            droneIframe.src = '/drone/';
           }
         }
       } else {
