@@ -10,36 +10,142 @@ export const PROPERTY = {
   note: "Autonomous interior drone flight path & exact interior photographic twin.",
 };
 
+export interface DefaultEstateShot {
+  id: string;
+  name: string;
+  roomKey: string;
+  waypointId: string;
+  type: "flat" | "panorama";
+  imageUrl: string;
+  tag: string;
+}
+
+export const DEFAULT_ESTATE_SHOTS: DefaultEstateShot[] = [
+  {
+    id: "estate-aerial",
+    name: "0.20-Acre Macro Aerial Vista",
+    roomKey: "roof-deck",
+    waypointId: "roof",
+    type: "flat",
+    imageUrl: "./interiors/aerial.jpg",
+    tag: "Aerial Orbit",
+  },
+  {
+    id: "estate-exterior-day",
+    name: "Front Elevation & Landscape Approach",
+    roomKey: "entry",
+    waypointId: "main-entry",
+    type: "flat",
+    imageUrl: "./interiors/exterior-day.jpg",
+    tag: "Daylight Facade",
+  },
+  {
+    id: "estate-exterior-dusk",
+    name: "Twilight Dusk Architectural Elevation",
+    roomKey: "entry",
+    waypointId: "main-entry",
+    type: "flat",
+    imageUrl: "./interiors/exterior-dusk.jpg",
+    tag: "Sunset Golden Hour",
+  },
+  {
+    id: "estate-kitchen",
+    name: "Chef's Kitchen & Quartz Waterfall Island",
+    roomKey: "kitchen",
+    waypointId: "kitchen",
+    type: "flat",
+    imageUrl: "./interiors/kitchen.jpg",
+    tag: "Kitchen Suite",
+  },
+  {
+    id: "estate-living",
+    name: "Grand Living Room & Brick Fireplace",
+    roomKey: "living",
+    waypointId: "living",
+    type: "flat",
+    imageUrl: "./interiors/living.jpg",
+    tag: "Living Room",
+  },
+  {
+    id: "estate-living-staged",
+    name: "Living Room Modern Virtual Staging",
+    roomKey: "living",
+    waypointId: "living",
+    type: "flat",
+    imageUrl: "./interiors/living-staged.jpg",
+    tag: "Japandi Modern",
+  },
+  {
+    id: "estate-lower-level",
+    name: "Finished Lower Level & Recreation Lounge",
+    roomKey: "basement-rec",
+    waypointId: "basement-rec",
+    type: "flat",
+    imageUrl: "./interiors/lower-level.jpg",
+    tag: "Rec Room",
+  },
+  {
+    id: "estate-bedroom",
+    name: "Primary Bedroom Suite Sanctuary",
+    roomKey: "primary",
+    waypointId: "primary",
+    type: "flat",
+    imageUrl: "./interiors/bedroom.jpg",
+    tag: "Primary Suite",
+  },
+  {
+    id: "estate-backyard",
+    name: "Private Backyard & Mature Tree Canopy",
+    roomKey: "back-door",
+    waypointId: "rear-door",
+    type: "flat",
+    imageUrl: "./interiors/backyard.jpg",
+    tag: "Rear Grounds",
+  },
+  {
+    id: "estate-backyard-staged",
+    name: "Staged Outdoor Entertainment Lounge",
+    roomKey: "back-door",
+    waypointId: "rear-door",
+    type: "flat",
+    imageUrl: "./interiors/backyard-staged.jpg",
+    tag: "Outdoor Living",
+  },
+];
+
 export const WAYPOINTS: Waypoint[] = [
   {
     id: "rear-door",
-    label: "Back Door",
+    label: "Back Door & Grounds",
     shortLabel: "Back Door",
     floor: "main",
     position: [0, 1.45, 9.1],
     lookAt: [0, 1.45, 5.2],
     description: "Start outside the rear entry and fly into the main floor.",
     roomKey: "back-door",
+    photoUrl: "./interiors/backyard.jpg",
   },
   {
     id: "main-entry",
-    label: "Main Entry",
+    label: "Main Entry & Foyer",
     shortLabel: "Entry",
     floor: "main",
     position: [0.2, 1.45, 5.8],
     lookAt: [0.6, 1.45, 3.2],
     description: "Cross the main circulation area toward the kitchen and living space.",
     roomKey: "entry",
+    photoUrl: "./interiors/exterior-day.jpg",
   },
   {
     id: "kitchen",
-    label: "Kitchen",
+    label: "Quartz Kitchen",
     shortLabel: "Kitchen",
     floor: "main",
     position: [-2.4, 1.7, 2.5],
     lookAt: [0.5, 1.3, 1.3],
     description: "Pass the kitchen island and work surface.",
     roomKey: "kitchen",
+    photoUrl: "./interiors/kitchen.jpg",
   },
   {
     id: "dining",
@@ -50,16 +156,18 @@ export const WAYPOINTS: Waypoint[] = [
     lookAt: [2.1, 1.4, 3.2],
     description: "Continue through the connected dining zone.",
     roomKey: "dining",
+    photoUrl: "./interiors/kitchen.jpg",
   },
   {
     id: "living",
-    label: "Living Room",
+    label: "Living Room Hearth",
     shortLabel: "Living",
     floor: "main",
     position: [2.6, 1.55, 3.2],
     lookAt: [2.5, 1.3, 5.0],
-    description: "Sweep through the living room before visiting the powder room.",
+    description: "Sweep through the living room before visiting the lower level.",
     roomKey: "living",
+    photoUrl: "./interiors/living.jpg",
   },
   {
     id: "powder",
@@ -80,16 +188,18 @@ export const WAYPOINTS: Waypoint[] = [
     lookAt: [0.9, -1.0, -1.8],
     description: "Drop smoothly into the finished basement.",
     roomKey: "stairs-down",
+    photoUrl: "./interiors/lower-level.jpg",
   },
   {
     id: "basement-rec",
-    label: "Basement Recreation Room",
+    label: "Finished Lower Level Rec Room",
     shortLabel: "Rec Room",
     floor: "basement",
     position: [-1.6, -1.45, -2.7],
     lookAt: [-2.2, -1.45, -4.1],
     description: "Sweep across the finished basement recreation area.",
     roomKey: "basement-rec",
+    photoUrl: "./interiors/lower-level.jpg",
   },
   {
     id: "basement-den",
@@ -153,13 +263,14 @@ export const WAYPOINTS: Waypoint[] = [
   },
   {
     id: "primary",
-    label: "Primary Bedroom",
+    label: "Primary Bedroom Suite",
     shortLabel: "Primary",
     floor: "upper",
     position: [-2.2, 4.0, -0.6],
     lookAt: [-2.0, 4.0, -2.2],
     description: "Enter the primary bedroom and continue toward the ensuite.",
     roomKey: "primary",
+    photoUrl: "./interiors/bedroom.jpg",
   },
   {
     id: "wic",
@@ -183,13 +294,14 @@ export const WAYPOINTS: Waypoint[] = [
   },
   {
     id: "roof",
-    label: "Roof Deck",
-    shortLabel: "Roof Deck",
+    label: "Aerial Macro Vista",
+    shortLabel: "Aerial",
     floor: "roof",
     position: [0.5, 7.0, 0.4],
     lookAt: [1.4, 7.0, 3.0],
-    description: "Rise onto the roof deck to end the route.",
+    description: "Rise onto the roof deck to end the route with high-altitude aerial view.",
     roomKey: "roof-deck",
+    photoUrl: "./interiors/aerial.jpg",
   },
 ];
 

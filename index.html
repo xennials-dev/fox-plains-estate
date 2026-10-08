@@ -504,6 +504,99 @@ a{color:inherit;text-decoration:none}
 .footer{border-top:1px solid var(--line);padding:42px clamp(24px,6vw,90px);display:flex;flex-wrap:wrap;
   justify-content:space-between;gap:18px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
 
+/* Drone Enter Overlays & Controls */
+.drone-enter-btn {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(7, 8, 10, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(140, 245, 183, 0.45);
+  border-radius: 999px;
+  color: #8cf5b7;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 15;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.drone-enter-btn:hover {
+  background: rgba(140, 245, 183, 0.22);
+  border-color: #8cf5b7;
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 28px rgba(140, 245, 183, 0.35);
+}
+.drone-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8cf5b7;
+  box-shadow: 0 0 8px #8cf5b7;
+  animation: dronePulse 1.8s infinite ease-in-out;
+}
+@keyframes dronePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.45); opacity: 0.5; }
+}
+.macro-drone-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: rgba(140, 245, 183, 0.12);
+  border: 1px solid rgba(140, 245, 183, 0.3);
+  border-radius: 6px;
+  color: #8cf5b7;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+.macro-drone-link:hover {
+  background: rgba(140, 245, 183, 0.25);
+  color: #ffffff;
+  border-color: #8cf5b7;
+}
+.layer__drone-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 7px 14px;
+  background: rgba(7, 8, 10, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(140, 245, 183, 0.35);
+  border-radius: 999px;
+  color: #8cf5b7;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+.layer__drone-btn:hover {
+  background: rgba(140, 245, 183, 0.2);
+  border-color: #8cf5b7;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+
 /* Reveal Animations */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
 .reveal.is-in{opacity:1;transform:none}
@@ -588,8 +681,12 @@ a{color:inherit;text-decoration:none}
         </p>
       </div>
 
-      <div class="aerial-container reveal" data-d="3">
+      <div class="aerial-container reveal" data-d="3" style="position:relative;">
         <img src="assets/img/aerial.jpg" alt="High-altitude aerial drone orbit of 15556 Fox Plains Dr" loading="lazy" />
+        <a href="/drone/?room=roof" class="drone-enter-btn" title="Enter 3D Drone View: High-Altitude Aerial Orbit">
+          <span class="drone-pulse-dot"></span>
+          🚁 Enter 3D Drone View · Orbit
+        </a>
       </div>
 
       <div class="hotspot-card-grid reveal" data-d="4">
@@ -641,9 +738,13 @@ a{color:inherit;text-decoration:none}
       <div class="staging-grid reveal" data-d="3">
         <!-- Living Room Staging -->
         <div class="staging-card">
-          <div class="staging-viewer" id="livingViewer">
+          <div class="staging-viewer" id="livingViewer" style="position:relative;">
             <img src="assets/img/living.jpg" alt="Living Room Current Setup" class="is-active" data-variant="warm" />
             <img src="assets/img/living-staged.jpg" alt="Living Room Virtually Staged Modern" data-variant="modern" />
+            <a href="/drone/?room=living" class="drone-enter-btn" title="Fly 3D Drone into the Living Room">
+              <span class="drone-pulse-dot"></span>
+              🚁 Fly Drone Inside · Living Room
+            </a>
           </div>
           <div class="staging-controls">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -659,9 +760,13 @@ a{color:inherit;text-decoration:none}
 
         <!-- Backyard Staging -->
         <div class="staging-card">
-          <div class="staging-viewer" id="backyardViewer">
+          <div class="staging-viewer" id="backyardViewer" style="position:relative;">
             <img src="assets/img/backyard.jpg" alt="Backyard Natural Lawn" class="is-active" data-variant="lawn" />
             <img src="assets/img/backyard-staged.jpg" alt="Backyard Staged with Fire Pit & Kitchen" data-variant="kitchen" />
+            <a href="/drone/?room=back-door" class="drone-enter-btn" title="Fly 3D Drone into the Backyard Patio">
+              <span class="drone-pulse-dot"></span>
+              🚁 Fly Drone Inside · Backyard Patio
+            </a>
           </div>
           <div class="staging-controls">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -706,10 +811,14 @@ a{color:inherit;text-decoration:none}
         <h2 class="display reveal" data-d="1">Day to Dusk</h2>
         <p class="lede reveal" data-d="2">Hover or tap to watch the exterior as the sun drops, with the brick facade and coach lights glowing at twilight.</p>
       </div>
-      <div class="frame daynight reveal" data-d="3" id="dayNight" role="button" tabindex="0" aria-label="Toggle day and dusk view">
+      <div class="frame daynight reveal" data-d="3" id="dayNight" role="button" tabindex="0" aria-label="Toggle day and dusk view" style="position:relative;">
         <img id="dayImg" alt="Home exterior in daylight" loading="lazy" />
         <img class="daynight__night" id="nightImg" alt="Home exterior at dusk" loading="lazy" />
         <span class="daynight__toggle" aria-hidden="true"><span>Now showing</span><b id="dayNightLabel">Day</b></span>
+        <a href="/drone/?room=front-entry" class="drone-enter-btn" style="z-index:20;" title="Enter 3D Drone View: Front Elevation">
+          <span class="drone-pulse-dot"></span>
+          🚁 Enter 3D Drone View · Front Elevation
+        </a>
       </div>
     </div>
   </section>
@@ -1078,6 +1187,17 @@ function renderMicrosite() {
     layer.className = 'layer' + (isHero ? ' layer--hero' : '');
     layer.style.zIndex = String(10 + i);
     layer.setAttribute('aria-label', scene.label);
+    const roomKeyMap = {
+      'orbit': 'roof',
+      'fpv': 'front-entry',
+      'living': 'living',
+      'kitchen': 'kitchen',
+      'bedroom': 'primary',
+      'lower': 'basement-rec',
+      'backyard': 'back-door',
+      'dusk': 'front-entry'
+    };
+
     layer.innerHTML = `
       <div class="layer__media">
         <img alt="${scene.title}" src="${scene.poster}" ${isHero ? 'fetchpriority="high"' : 'loading="lazy"'} />
@@ -1089,6 +1209,12 @@ function renderMicrosite() {
         <p class="kicker">${scene.kicker}</p>
         ${isHero ? `<p class="title">${scene.title}</p>` : `<h2 class="title">${scene.title}</h2>`}
         <p class="copy">${scene.copy}</p>
+        <div>
+          <a href="/drone/?room=${roomKeyMap[scene.id] || 'living'}" class="layer__drone-btn" title="Enter 3D Drone View: ${scene.label}">
+            <span class="drone-pulse-dot"></span>
+            🚁 Enter 3D Drone View · ${scene.label}
+          </a>
+        </div>
       </div></div>
       ${isHero ? `
         <div class="hero__meta">
@@ -1168,7 +1294,13 @@ function renderMicrosite() {
       cell.style.setProperty('--z', m.z || 1.8);
       cell.style.setProperty('--ox', m.ox || '50%');
       cell.style.setProperty('--oy', m.oy || '50%');
-      cell.insertAdjacentHTML('beforeend', `<figcaption class="macro__label">${m.label}<small>${m.note || ''}</small></figcaption>`);
+      const noteLower = (m.note || '').toLowerCase();
+      const macroRoom = noteLower.includes('kitchen') ? 'kitchen' :
+                        noteLower.includes('living') ? 'living' :
+                        noteLower.includes('primary') ? 'primary' :
+                        noteLower.includes('backyard') ? 'back-door' :
+                        noteLower.includes('entry') ? 'front-entry' : 'living';
+      cell.insertAdjacentHTML('beforeend', `<figcaption class="macro__label">${m.label}<small>${m.note || ''}</small><a href="/drone/?room=${macroRoom}" class="macro-drone-link" title="Fly 3D Drone to ${m.note}">🚁 Drone View &rarr;</a></figcaption>`);
       macroGrid.appendChild(cell);
     });
   }

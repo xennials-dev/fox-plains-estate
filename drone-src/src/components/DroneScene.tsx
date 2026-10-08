@@ -97,12 +97,110 @@ function Furniture({
   );
 }
 
+function PhotoPanel({
+  position,
+  rotation = [0, 0, 0],
+  size = [2.4, 1.5],
+  imageUrl,
+}: {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+  size?: [number, number];
+  imageUrl: string;
+}) {
+  const texture = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load(imageUrl);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }, [imageUrl]);
+
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Sleek architectural gold frame */}
+      <mesh position={[0, 0, -0.015]}>
+        <planeGeometry args={[size[0] + 0.08, size[1] + 0.08]} />
+        <meshStandardMaterial color="#c9a86a" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Real Estate Photograph Surface */}
+      <mesh>
+        <planeGeometry args={size} />
+        <meshBasicMaterial map={texture} toneMapped={false} />
+      </mesh>
+    </group>
+  );
+}
+
 function PropertyShell() {
   const floorHeight = 2.65;
   const levelBottoms = [-1.45, 1.45, 4.0];
 
   return (
     <group>
+      {/* 3D Real Estate Photo Portals across the Flight Path */}
+      {/* 1. Rear Entrance / Backyard Grounds */}
+      <PhotoPanel
+        position={[0, 2.2, 7.8]}
+        rotation={[0, 0, 0]}
+        size={[2.6, 1.6]}
+        imageUrl="./interiors/backyard.jpg"
+      />
+      {/* 2. Main Entry / Foyer Daylight Exterior */}
+      <PhotoPanel
+        position={[0.2, 2.3, 4.98]}
+        rotation={[0, Math.PI, 0]}
+        size={[2.5, 1.5]}
+        imageUrl="./interiors/exterior-day.jpg"
+      />
+      {/* 3. Kitchen & Waterfall Island */}
+      <PhotoPanel
+        position={[-3.98, 2.45, -1.8]}
+        rotation={[0, Math.PI / 2, 0]}
+        size={[2.8, 1.6]}
+        imageUrl="./interiors/kitchen.jpg"
+      />
+      {/* 4. Living Room Hearth & Brick Fireplace */}
+      <PhotoPanel
+        position={[2.65, 2.35, 4.98]}
+        rotation={[0, Math.PI, 0]}
+        size={[2.8, 1.6]}
+        imageUrl="./interiors/living.jpg"
+      />
+      {/* 5. Living Room Japandi Virtual Staging */}
+      <PhotoPanel
+        position={[2.0, 2.35, 0.1]}
+        rotation={[0, -Math.PI / 2, 0]}
+        size={[2.2, 1.3]}
+        imageUrl="./interiors/living-staged.jpg"
+      />
+      {/* 6. Finished Lower Level Rec Room */}
+      <PhotoPanel
+        position={[-2.2, -0.15, -4.98]}
+        rotation={[0, 0, 0]}
+        size={[3.2, 1.8]}
+        imageUrl="./interiors/lower-level.jpg"
+      />
+      {/* 7. Primary Bedroom Suite */}
+      <PhotoPanel
+        position={[-2.15, 5.25, -4.98]}
+        rotation={[0, 0, 0]}
+        size={[2.8, 1.6]}
+        imageUrl="./interiors/bedroom.jpg"
+      />
+      {/* 8. High-Altitude Aerial Orbit on Roof deck */}
+      <PhotoPanel
+        position={[0.5, 8.2, -4.9]}
+        rotation={[0, 0, 0]}
+        size={[3.6, 2.0]}
+        imageUrl="./interiors/aerial.jpg"
+      />
+      {/* 9. Twilight Dusk Exterior */}
+      <PhotoPanel
+        position={[0.5, 8.2, 4.9]}
+        rotation={[0, Math.PI, 0]}
+        size={[3.6, 2.0]}
+        imageUrl="./interiors/exterior-dusk.jpg"
+      />
       {/* floor slabs */}
       {levelBottoms.map((y) => (
         <mesh key={y} position={[0, y - 0.08, 0]}>

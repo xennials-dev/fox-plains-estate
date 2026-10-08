@@ -13,6 +13,7 @@ export interface Waypoint {
   lookAt: Vec3;
   description: string;
   roomKey: string;
+  photoUrl?: string;
 }
 
 export interface InteriorShot {
@@ -21,10 +22,12 @@ export interface InteriorShot {
   roomKey: string;
   waypointId: string;
   type: InteriorShotType;
-  blob: Blob;
+  blob?: Blob;
   createdAt: number;
 }
 
-export interface InteriorShotView extends Omit<InteriorShot, "blob"> {
+export interface InteriorShotView extends InteriorShot {
   objectUrl: string;
+  isDefault?: boolean;
+  tag?: string;
 }

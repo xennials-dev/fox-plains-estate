@@ -7,13 +7,6 @@ interface Props {
   onShotSelect: (shot: InteriorShotView | null) => void;
 }
 
-function toView(shot: Awaited<ReturnType<typeof listShots>>[number]): InteriorShotView {
-  return {
-    ...shot,
-    objectUrl: URL.createObjectURL(shot.blob),
-  };
-}
-
 export default function ShotManager({
   waypoints,
   onShotSelect,
@@ -25,17 +18,18 @@ export default function ShotManager({
 
   async function refresh() {
     const records = await listShots();
-    setShots((prev) => {
-      for (const old of prev) URL.revokeObjectURL(old.objectUrl);
-      return records.map(toView);
-    });
+    setShots(records);
   }
 
   useEffect(() => {
     void refresh();
 
     return () => {
-      for (const shot of shots) URL.revokeObjectURL(shot.objectUrl);
+      for (const shot of shots) {
+        if (!shot.isDefault && shot.objectUrl.startsWith("blob:")) {
+          URL.revokeObjectURL(shot.objectUrl);
+        }
+      }
     };
     // refresh intentionally runs once on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,7 +64,9 @@ export default function ShotManager({
 
   async function remove(id: string) {
     const shot = shots.find((item) => item.id === id);
-    if (shot) URL.revokeObjectURL(shot.objectUrl);
+    if (shot && !shot.isDefault && shot.objectUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(shot.objectUrl);
+    }
 
     await deleteShot(id);
     const next = shots.filter((item) => item.id !== id);
@@ -83,15 +79,15 @@ export default function ShotManager({
         className="button button--accent shot-manager-toggle"
         onClick={() => setDrawerOpen((open) => !open)}
       >
-        {drawerOpen ? "Hide Interior Shots" : "Interior Shots"}
+        {drawerOpen ? "Hide Estate Gallery" : "Estate Photography Gallery"}
       </button>
 
       {drawerOpen && (
         <aside className="shot-manager">
           <div className="shot-manager__header">
             <div>
-              <strong>Interior Shots</strong>
-              <span>Keep the DRONE VIEW overlay active while showing exact photos.</span>
+              <strong>Estate Photography Gallery</strong>
+              <span>Verified high-resolution interior and aerial photographs synchronized with the drone path.</span>
             </div>
             <button className="button button--dark" onClick={() => setDrawerOpen(false)}>
               ×
@@ -133,16 +129,16 @@ export default function ShotManager({
                 event.target.value = "";
               }}
             />
-            <strong>Choose interior shots</strong>
+            <strong>Upload additional photos</strong>
             <span>
-              Upload kitchen, living room, bedrooms, bathrooms, basement, or roof-deck views.
+              Upload extra kitchen, living room, bedrooms, bathrooms, basement, or roof-deck views.
             </span>
           </label>
 
           <div className="shot-list">
             {shots.length === 0 && (
               <div className="shot-list__empty">
-                No interior shots uploaded yet.
+                Loading estate photographs...
               </div>
             )}
 
@@ -156,7 +152,11 @@ export default function ShotManager({
                   <div className="shot-card__info">
                     <strong>{shot.name}</strong>
                     <span>{wp?.label ?? "Unmapped waypoint"}</span>
-                    <small>{shot.type === "panorama" ? "360°" : "Exact photo"}</small>
+                    {shot.isDefault ? (
+                      <small style={{ color: "#8cf5b7" }}>★ Official Listing Photo</small>
+                    ) : (
+                      <small>{shot.type === "panorama" ? "360°" : "User Photo"}</small>
+                    )}
                   </div>
 
                   <div className="shot-card__actions">
@@ -166,12 +166,14 @@ export default function ShotManager({
                     >
                       View
                     </button>
-                    <button
-                      className="button button--dark"
-                      onClick={() => void remove(shot.id)}
-                    >
-                      Delete
-                    </button>
+                    {!shot.isDefault && (
+                      <button
+                        className="button button--dark"
+                        onClick={() => void remove(shot.id)}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               );

@@ -5,6 +5,7 @@ import InteriorShotLayer from "./components/InteriorShotLayer";
 import RouteTimeline from "./components/RouteTimeline";
 import ShotManager from "./components/ShotManager";
 import { PROPERTY, WAYPOINTS } from "./data/house";
+import { listShots } from "./lib/shotStore";
 import type { InteriorDisplayMode, InteriorShotView } from "./types";
 
 const REVEAL_THRESHOLD = 0.012;
@@ -18,6 +19,7 @@ export default function App() {
   const [speed, setSpeed] = useState(1);
   const [progress, setProgress] = useState(0);
   const [routeIndex, setRouteIndex] = useState(0);
+  const [shots, setShots] = useState<InteriorShotView[]>([]);
   const [selectedShot, setSelectedShot] = useState<InteriorShotView | null>(null);
   const [displayMode, setDisplayMode] = useState<InteriorDisplayMode>("inset");
   const [autoInteriorShots, setAutoInteriorShots] = useState(true);
@@ -30,19 +32,42 @@ export default function App() {
     [selectedShot],
   );
 
+  // Load pre-bundled official estate photos and custom shots on mount
   useEffect(() => {
-    if (!autoInteriorShots || !selectedShot) return;
+    void listShots().then((loadedShots) => {
+      setShots(loadedShots);
+      // If we are at the initial waypoint, show its photo immediately
+      const initialWp = WAYPOINTS[0];
+      const initialShot = loadedShots.find((s) => s.waypointId === initialWp.id);
+      if (initialShot) setSelectedShot(initialShot);
+    });
+  }, []);
 
-    // Keep a manually selected photo open. Automatic mode still lets the
-    // photo stay attached to the selected room until the camera moves away.
-    const shotIndex = WAYPOINTS.findIndex(
-      (wp) => wp.id === selectedShot.waypointId,
-    );
-
-    if (Math.abs(shotIndex - currentIndex) > 1) {
-      setSelectedShot(null);
+  // Listen for query params e.g. ?room=kitchen or ?wp=living
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const targetRoom = params.get("room") || params.get("wp") || params.get("waypoint");
+    if (targetRoom) {
+      const idx = WAYPOINTS.findIndex(
+        (wp) => wp.id === targetRoom || wp.roomKey === targetRoom,
+      );
+      if (idx >= 0) {
+        jumpTo(idx);
+      }
     }
-  }, [autoInteriorShots, currentIndex, selectedShot]);
+  }, []);
+
+  // Auto-synchronize the high-res estate photograph as the drone flies through each room
+  useEffect(() => {
+    if (!autoInteriorShots || shots.length === 0) return;
+    const currentWp = WAYPOINTS[currentIndex];
+    if (!currentWp) return;
+
+    const matchingShot = shots.find((s) => s.waypointId === currentWp.id);
+    if (matchingShot) {
+      setSelectedShot(matchingShot);
+    }
+  }, [autoInteriorShots, currentIndex, shots]);
 
   function handleProgress(value: number) {
     setProgress(value);
@@ -57,6 +82,14 @@ export default function App() {
   function jumpTo(index: number) {
     setRouteIndex(index);
     setProgress(index / Math.max(1, WAYPOINTS.length - 1));
+
+    if (shots.length > 0) {
+      const targetWp = WAYPOINTS[index];
+      const matchingShot = shots.find((s) => s.waypointId === targetWp?.id);
+      if (matchingShot) {
+        setSelectedShot(matchingShot);
+      }
+    }
   }
 
   return (
@@ -77,30 +110,59 @@ export default function App() {
         />
 
         <div className="property-card glass">
-          <div className="eyebrow">PROPERTY WALKTHROUGH</div>
+          <div className="eyebrow">ESTATE DRONE TWIN · FLORISSANT, MO</div>
           <h1>{PROPERTY.name}</h1>
           <p>{PROPERTY.city}</p>
           <div className="property-card__facts">
             <span>{PROPERTY.beds} BD</span>
             <span>{PROPERTY.baths} BA</span>
             <span>{PROPERTY.livingAreaSqFt.toLocaleString()} SQ FT</span>
+            <span style={{ color: "#8cf5b7" }}>11 ESTATE PHOTOS</span>
           </div>
           <small>{PROPERTY.note}</small>
         </div>
 
         <div className="top-actions">
+          <a
+            href="/"
+            className="button button--dark"
+            style={{ textDecoration: "none" }}
+            title="Return to Fox Plains Estate Main Presentation"
+          >
+            ← Main Presentation
+          </a>
           <button
             className={`button ${autoInteriorShots ? "button--accent" : "button--dark"}`}
             onClick={() => setAutoInteriorShots((value) => !value)}
+            title="Toggle automated photo reveals as drone reaches each room"
           >
-            Auto Interior {autoInteriorShots ? "ON" : "OFF"}
+            Photo Synced {autoInteriorShots ? "ON" : "OFF"}
           </button>
           <button
             className="button button--dark"
             onClick={() => setPlaying((value) => !value)}
           >
-            {playing ? "Pause Drone" : "Play Drone"}
+            {playing ? "Pause Flight" : "Resume Flight"}
           </button>
+        </div>
+
+        {/* Room Photo Quick-Selector Strip */}
+        <div className="room-strip glass">
+          {WAYPOINTS.filter((wp) => Boolean(wp.photoUrl)).map((wp) => {
+            const wpIndex = WAYPOINTS.findIndex((w) => w.id === wp.id);
+            const isActive = currentIndex === wpIndex;
+            return (
+              <button
+                key={wp.id}
+                className={`room-chip ${isActive ? "room-chip--active" : ""}`}
+                onClick={() => jumpTo(wpIndex)}
+                title={`Fly directly to ${wp.label}`}
+              >
+                <img src={wp.photoUrl} alt={wp.shortLabel} className="room-chip__thumb" />
+                <span>{wp.shortLabel}</span>
+              </button>
+            );
+          })}
         </div>
 
         <ShotManager
@@ -126,28 +188,30 @@ export default function App() {
         {selectedShot && (
           <div className="shot-controls glass">
             <div>
-              <strong>{selectedShot.name}</strong>
-              <span>{waypointForSelectedShot?.label ?? "Interior shot"}</span>
+              <strong style={{ color: "#8cf5b7" }}>★ {selectedShot.name}</strong>
+              <span>{waypointForSelectedShot?.label ?? "Estate Room Shot"}</span>
             </div>
 
             <div className="shot-controls__buttons">
               <button
                 className={`button ${displayMode === "inset" ? "button--accent" : "button--dark"}`}
                 onClick={() => setDisplayMode("inset")}
+                title="Picture-in-picture floating overlay"
               >
-                Inset
+                Inset View
               </button>
               <button
                 className={`button ${displayMode === "focus" ? "button--accent" : "button--dark"}`}
                 onClick={() => setDisplayMode("focus")}
+                title="High-resolution full view"
               >
-                Focus
+                Focus Mode
               </button>
               <button
                 className="button button--dark"
                 onClick={() => setSelectedShot(null)}
               >
-                Close
+                Hide
               </button>
             </div>
           </div>
@@ -186,7 +250,7 @@ export default function App() {
               className="button button--dark"
               onClick={() => jumpTo(WAYPOINTS.length - 1)}
             >
-              Roof Deck
+              Aerial Orbit
             </button>
           </div>
 

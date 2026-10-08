@@ -547,7 +547,68 @@ button {
   color: #8cf5b7;
 }
 
+.room-strip {
+  position: absolute;
+  left: 22px;
+  bottom: 110px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  max-width: calc(100vw - 420px);
+  overflow-x: auto;
+  z-index: 30;
+  scrollbar-width: thin;
+}
+
+.room-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #d8e5ec;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.room-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(140, 245, 183, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.room-chip--active {
+  border-color: #8cf5b7;
+  background: rgba(140, 245, 183, 0.18);
+  color: #8cf5b7;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(140, 245, 183, 0.25);
+}
+
+.room-chip__thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 @media (max-width: 800px) {
+  .room-strip {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    bottom: 185px;
+  }
+
   .property-card {
     top: 100px;
     left: 22px;
@@ -590,3 +651,4 @@ button {
     left: 12px;
   }
 }
+
