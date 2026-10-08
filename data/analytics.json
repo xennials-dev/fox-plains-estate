@@ -1,6 +1,6 @@
 {
   "summary": {
-    "totalImpressions": 1433,
+    "totalImpressions": 1434,
     "uniqueVisitors": 894,
     "avgDurationSeconds": 248,
     "tourRequests": 19,
@@ -19,6 +19,81 @@
     "dusk": 530
   },
   "recentEvents": [
+    {
+      "type": "drone_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:52:15.088Z"
+    },
+    {
+      "type": "drone_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:52:10.320Z"
+    },
+    {
+      "type": "6dof_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:52:04.703Z"
+    },
+    {
+      "type": "floorplan_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:51:12.976Z"
+    },
+    {
+      "type": "6dof_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:51:07.477Z"
+    },
+    {
+      "type": "nodes_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:51:06.194Z"
+    },
+    {
+      "type": "dollhouse_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:51:05.439Z"
+    },
+    {
+      "type": "floorplan_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:51:03.646Z"
+    },
+    {
+      "type": "dollhouse_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:56.122Z"
+    },
+    {
+      "type": "nodes_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:49.995Z"
+    },
+    {
+      "type": "6dof_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:48.885Z"
+    },
+    {
+      "type": "6dof_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:47.455Z"
+    },
+    {
+      "type": "drone_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:38.524Z"
+    },
+    {
+      "type": "page_view",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:30.713Z"
+    },
+    {
+      "type": "6dof_launch",
+      "propertyId": "fox-plains",
+      "timestamp": "2026-10-08T13:50:30.661Z"
+    },
     {
       "type": "nodes_launch",
       "propertyId": "fox-plains",
@@ -193,81 +268,6 @@
       "type": "page_view",
       "propertyId": "fox-plains",
       "timestamp": "2026-10-08T02:30:35.262Z"
-    },
-    {
-      "type": "6dof_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T02:30:35.031Z"
-    },
-    {
-      "type": "6dof_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:56:21.325Z"
-    },
-    {
-      "type": "floorplan_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:56:05.119Z"
-    },
-    {
-      "type": "nodes_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:55:46.623Z"
-    },
-    {
-      "type": "dollhouse_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:55:27.935Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:54:11.022Z"
-    },
-    {
-      "type": "6dof_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:54:10.569Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:26:20.158Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:25:42.539Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:21:50.802Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T01:01:15.225Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T00:57:25.126Z"
-    },
-    {
-      "type": "6dof_launch",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T00:28:17.593Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T00:24:35.254Z"
-    },
-    {
-      "type": "page_view",
-      "propertyId": "fox-plains",
-      "timestamp": "2026-10-08T00:19:19.845Z"
     }
   ]
 }

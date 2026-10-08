@@ -223,7 +223,7 @@
                   </button>
                 </div>
               </div>
-              <iframe id="spatialDroneIframe" class="drone-iframe" src="" allow="autoplay; accelerometer; gyroscope"></iframe>
+              <iframe id="spatialDroneIframe" class="drone-iframe" src="http://localhost:5173/" allow="autoplay; accelerometer; gyroscope"></iframe>
             </div>
 
             <!-- 6DOF RETICLE & PROMPT -->
@@ -1493,10 +1493,9 @@
         if (mobEl) mobEl.style.display = 'none';
 
         if (droneIframe) {
-          const targetDroneSrc = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? 'http://localhost:5173/'
-            : '/drone/';
-          if (!droneIframe.src || droneIframe.src === 'about:blank' || (!droneIframe.src.includes('5173') && !droneIframe.src.includes('/drone/'))) {
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const targetDroneSrc = isLocal ? 'http://localhost:5173/' : '/drone/';
+          if (!droneIframe.src || droneIframe.src === 'about:blank' || (isLocal && !droneIframe.src.startsWith('http://localhost:5173/'))) {
             droneIframe.src = targetDroneSrc;
           }
         }
