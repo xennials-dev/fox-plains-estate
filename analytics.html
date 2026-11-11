@@ -383,11 +383,20 @@ body {
 <header class="topbar">
   <div class="brand-group">
     <h1 class="brand-title">ESTATESPHERE</h1>
-    <span class="badge-role">Intelligence & Leads</span>
+    <span class="badge-role" id="roleBadge">Agency Intelligence &amp; Leads</span>
   </div>
 
   <div class="top-actions">
-    <a href="/studio" class="btn btn-outline">
+    <button type="button" class="btn btn-outline" onclick="copySellerReport()" title="Copy formatted Weekly Seller Marketing Report for the homeowner">
+      📋 Copy Seller Report
+    </button>
+    <button type="button" class="btn btn-outline" onclick="exportLeadsCSV()" title="Download filtered leads as CSV">
+      📥 Export Leads CSV
+    </button>
+    <a href="/drone/?id=fox-plains" target="_blank" class="btn btn-outline" id="droneTourBtn" style="border-color:rgba(140,245,183,0.4); color:#8cf5b7;">
+      🚁 3D Drone Twin ↗
+    </a>
+    <a href="/studio" class="btn btn-outline" id="studioNavBtn">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       Listing Studio
     </a>
@@ -507,12 +516,47 @@ body {
 </main>
 
 <script>
+const urlParams = new URLSearchParams(window.location.search);
 let allLeads = [];
-let currentFilter = 'fox-plains';
+let currentFilter = urlParams.get('propertyId') || 'fox-plains';
+const clientToken = urlParams.get('clientToken') || '';
+const operatorKey = localStorage.getItem('es_operator_key') || 'estatesphere-solo-2026';
+
+if (clientToken) {
+  const badge = document.getElementById('roleBadge');
+  if (badge) badge.textContent = 'Realtor Partner Portal (Scoped)';
+  const studioBtn = document.getElementById('studioNavBtn');
+  if (studioBtn) studioBtn.style.display = 'none';
+}
+
+function getAuthHeaders(extra = {}) {
+  const headers = { ...extra };
+  if (!clientToken && operatorKey) {
+    headers['x-estatesphere-key'] = operatorKey;
+  }
+  return headers;
+}
+
+function updateTourButtons() {
+  const targetId = currentFilter === 'all' ? 'fox-plains' : currentFilter;
+  const viewBtn = document.getElementById('viewTourBtn');
+  if (viewBtn) viewBtn.href = `/?id=${encodeURIComponent(targetId)}`;
+  const droneBtn = document.getElementById('droneTourBtn');
+  if (droneBtn) droneBtn.href = `/drone/?id=${encodeURIComponent(targetId)}`;
+}
+
+function filterProperty(val) {
+  currentFilter = val || 'all';
+  updateTourButtons();
+  fetchAnalytics();
+  renderLeads();
+}
 
 async function fetchAnalytics() {
   try {
-    const res = await fetch('/api/analytics');
+    const qs = new URLSearchParams({ propertyId: currentFilter });
+    if (clientToken) qs.set('clientToken', clientToken);
+    const res = await fetch(`/api/analytics?${qs.toString()}`, { headers: getAuthHeaders() });
     const data = await res.json();
     if (!data.success) return;
 
@@ -522,13 +566,88 @@ async function fetchAnalytics() {
     const mins = Math.floor((summary.avgDurationSeconds || 248) / 60);
     const secs = (summary.avgDurationSeconds || 248) % 60;
     document.getElementById('kpi-duration').textContent = `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
-    document.getElementById('kpi-leads').textContent = summary.tourRequests || 18;
+    document.getElementById('kpi-leads').textContent = summary.tourRequests ?? 18;
     document.getElementById('kpi-staging').textContent = summary.stagingToggles || 342;
 
     renderRetentionHeatmap(data.analytics.sceneViews || {});
+    renderConciergeStream(data.analytics.recentEvents || []);
   } catch (err) {
     console.error('Error fetching analytics:', err);
   }
+}
+
+function renderConciergeStream(recentEvents) {
+  const queries = recentEvents.filter(e => e.type === 'concierge_query' && e.query);
+  if (queries.length === 0) return;
+  const container = document.getElementById('conciergeLogs');
+  if (!container) return;
+  container.innerHTML = '';
+  queries.slice(0, 6).forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'log-item';
+    const timeStr = q.timestamp ? new Date(q.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now';
+    div.innerHTML = `
+      <p class="log-query">"${q.query}"</p>
+      <span class="log-time">${q.propertyId} · ${timeStr}</span>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function copySellerReport() {
+  const select = document.getElementById('propertyFilter');
+  const propLabel = select && select.options[select.selectedIndex] ? select.options[select.selectedIndex].text : currentFilter;
+  const imp = document.getElementById('kpi-impressions').textContent;
+  const vis = document.getElementById('kpi-visitors').textContent;
+  const dur = document.getElementById('kpi-duration').textContent;
+  const reqs = document.getElementById('kpi-leads').textContent;
+  const stg = document.getElementById('kpi-staging').textContent;
+
+  const report =
+    `📊 WEEKLY SELLER MARKETING INTELLIGENCE REPORT\n` +
+    `Property: ${propLabel}\n` +
+    `Generated: ${new Date().toLocaleDateString()}\n\n` +
+    `• Total Microsite Impressions: ${imp}\n` +
+    `• Unique Buyer Prospects: ${vis}\n` +
+    `• Avg Interactive Tour Duration: ${dur}\n` +
+    `• Virtual Staging Flips: ${stg}\n` +
+    `• Private Showing Inquiries: ${reqs}\n\n` +
+    `Live Buyer Presentation: ${window.location.origin}/?id=${currentFilter === 'all' ? 'fox-plains' : currentFilter}\n` +
+    `3D FPV Drone Digital Twin: ${window.location.origin}/drone/?id=${currentFilter === 'all' ? 'fox-plains' : currentFilter}`;
+
+  navigator.clipboard.writeText(report);
+  alert('Weekly Seller Marketing Report copied to clipboard!');
+}
+
+function exportLeadsCSV() {
+  const filtered = currentFilter === 'all'
+    ? allLeads
+    : allLeads.filter(l => l.propertyId === currentFilter);
+  const rows = [
+    ['ID', 'Name', 'Email', 'Phone', 'Property ID', 'Property Address', 'Requested Date', 'Status', 'Message', 'Created At']
+  ];
+  filtered.forEach(l => {
+    rows.push([
+      l.id || '',
+      l.name || '',
+      l.email || '',
+      l.phone || '',
+      l.propertyId || '',
+      l.propertyAddress || '',
+      l.date || '',
+      l.status || '',
+      (l.message || '').replace(/\r?\n/g, ' '),
+      l.createdAt || ''
+    ]);
+  });
+  const csvContent = rows.map(r => r.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `estatesphere-leads-${currentFilter}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function renderRetentionHeatmap(sceneViews) {
@@ -564,7 +683,9 @@ function renderRetentionHeatmap(sceneViews) {
 
 async function fetchLeads() {
   try {
-    const res = await fetch('/api/leads');
+    const qs = new URLSearchParams({ propertyId: currentFilter });
+    if (clientToken) qs.set('clientToken', clientToken);
+    const res = await fetch(`/api/leads?${qs.toString()}`, { headers: getAuthHeaders() });
     const data = await res.json();
     if (!data.success) return;
 
@@ -620,9 +741,10 @@ function renderLeads() {
 
 async function updateLeadStatus(id, newStatus) {
   try {
-    await fetch(`/api/leads/${id}`, {
+    const qs = clientToken ? `?propertyId=${encodeURIComponent(currentFilter)}&clientToken=${encodeURIComponent(clientToken)}` : '';
+    await fetch(`/api/leads/${id}${qs}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ status: newStatus })
     });
     const item = allLeads.find(l => l.id === id);
@@ -634,12 +756,13 @@ async function updateLeadStatus(id, newStatus) {
 
 async function populatePropertyFilter() {
   try {
-    const res = await fetch('/api/properties');
+    const qs = clientToken ? `?propertyId=${encodeURIComponent(currentFilter)}&clientToken=${encodeURIComponent(clientToken)}` : '';
+    const res = await fetch(`/api/properties${qs}`, { headers: getAuthHeaders() });
     const data = await res.json();
     if (data.success && data.properties) {
       const select = document.getElementById('propertyFilter');
       if (!select) return;
-      select.innerHTML = '<option value="all">All Properties in Portfolio</option>';
+      select.innerHTML = clientToken ? '' : '<option value="all">All Properties in Portfolio</option>';
       data.properties.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.id;
@@ -651,6 +774,7 @@ async function populatePropertyFilter() {
   } catch (_) {}
 }
 
+updateTourButtons();
 populatePropertyFilter();
 fetchAnalytics();
 fetchLeads();

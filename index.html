@@ -1210,7 +1210,7 @@ function renderMicrosite() {
         ${isHero ? `<p class="title">${scene.title}</p>` : `<h2 class="title">${scene.title}</h2>`}
         <p class="copy">${scene.copy}</p>
         <div>
-          <a href="/drone/?room=${roomKeyMap[scene.id] || 'living'}" class="layer__drone-btn" title="Enter 3D Drone View: ${scene.label}">
+          <a href="/drone/?id=${encodeURIComponent(PROPERTY.id)}&room=${roomKeyMap[scene.id] || 'living'}" class="layer__drone-btn" title="Enter 3D Drone View: ${scene.label}">
             <span class="drone-pulse-dot"></span>
             🚁 Enter 3D Drone View · ${scene.label}
           </a>
@@ -1300,9 +1300,30 @@ function renderMicrosite() {
                         noteLower.includes('primary') ? 'primary' :
                         noteLower.includes('backyard') ? 'back-door' :
                         noteLower.includes('entry') ? 'front-entry' : 'living';
-      cell.insertAdjacentHTML('beforeend', `<figcaption class="macro__label">${m.label}<small>${m.note || ''}</small><a href="/drone/?room=${macroRoom}" class="macro-drone-link" title="Fly 3D Drone to ${m.note}">🚁 Drone View &rarr;</a></figcaption>`);
+      cell.insertAdjacentHTML('beforeend', `<figcaption class="macro__label">${m.label}<small>${m.note || ''}</small><a href="/drone/?id=${encodeURIComponent(PROPERTY.id)}&room=${macroRoom}" class="macro-drone-link" title="Fly 3D Drone to ${m.note}">🚁 Drone View &rarr;</a></figcaption>`);
       macroGrid.appendChild(cell);
     });
+  }
+
+  // Option B: Synchronize all static /drone/ links on the page with current PROPERTY.id
+  $$('a[href^="/drone"]').forEach(link => {
+    try {
+      const url = new URL(link.getAttribute('href'), window.location.origin);
+      url.searchParams.set('id', PROPERTY.id);
+      link.setAttribute('href', `${url.pathname}${url.search}`);
+    } catch (_) {}
+  });
+
+  // Dynamic Concierge Header & Greeting for active property
+  if ($('#conciergeTitle')) {
+    $('#conciergeTitle').textContent = `${PROPERTY.brand || PROPERTY.address} Concierge`;
+  }
+  if ($('#conciergeInput')) {
+    $('#conciergeInput').placeholder = `Ask anything about ${PROPERTY.address}...`;
+  }
+  const firstBotMsg = $('#conciergeBody .chat-msg--bot');
+  if (firstBotMsg) {
+    firstBotMsg.innerHTML = `Hello! I'm the dedicated AI Concierge for <b>${PROPERTY.address}</b> (${PROPERTY.price}). Ask me anything about utilities, taxes, school districts, architectural specs, or scheduling a private showing with <b>${(PROPERTY.agent && PROPERTY.agent.name) || 'our listing partner'}</b>.`;
   }
 
   // Dollhouse & Film
@@ -1507,44 +1528,59 @@ function toggleConcierge() {
 conciergeTrigger.addEventListener('click', toggleConcierge);
 conciergeClose.addEventListener('click', toggleConcierge);
 
+const conciergeHistory = [];
+
 function botReply(text) {
   const msgEl = document.createElement('div');
   msgEl.className = 'chat-msg chat-msg--bot';
   msgEl.innerHTML = text;
   conciergeBody.appendChild(msgEl);
   conciergeBody.scrollTop = conciergeBody.scrollHeight;
+  return msgEl;
 }
 
-function userSend(text) {
+async function userSend(text) {
   const msgEl = document.createElement('div');
   msgEl.className = 'chat-msg chat-msg--user';
   msgEl.textContent = text;
   conciergeBody.appendChild(msgEl);
+  conciergeBody.scrollTop = conciergeBody.scrollHeight;
 
-  // Track event
+  const thinkingEl = botReply('<span style="opacity:0.65;">Consulting property dossier...</span>');
+
   try {
-    fetch('/api/analytics/event', {
+    const res = await fetch('/api/concierge/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'concierge_query', propertyId: PROPERTY.id, query: text })
+      body: JSON.stringify({
+        propertyId: PROPERTY.id,
+        query: text,
+        history: conciergeHistory
+      })
     });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.reply) {
+        thinkingEl.innerHTML = data.reply;
+        conciergeHistory.push({ role: 'user', content: text });
+        conciergeHistory.push({ role: 'assistant', content: data.reply });
+        conciergeBody.scrollTop = conciergeBody.scrollHeight;
+        return;
+      }
+    }
   } catch (_) {}
 
-  // Match knowledge base
+  // Offline / Local Client Fallback
   const lower = text.toLowerCase();
   const kb = PROPERTY.knowledge || DEFAULT_PROPERTY.knowledge;
-  let matched = kb.find(item => item.triggers.some(t => lower.includes(t)));
-
-  setTimeout(() => {
-    if (matched) {
-      botReply(matched.response);
-    } else {
-      const agentName = (PROPERTY.agent && PROPERTY.agent.name) || 'Ava Marchetti';
-      const agentPhone = (PROPERTY.agent && PROPERTY.agent.phone) || '(314) 555-0194';
-      botReply(`Thanks for your question! For specific inquiries on <b>${PROPERTY.address}</b>, connect directly with ${agentName} at <b>${agentPhone}</b> or scroll down to schedule an in-person viewing.`);
-    }
-  }, 400);
-
+  const matched = kb.find(item => item.triggers.some(t => lower.includes(t)));
+  if (matched) {
+    thinkingEl.innerHTML = matched.response;
+  } else {
+    const agentName = (PROPERTY.agent && PROPERTY.agent.name) || 'Ava Marchetti';
+    const agentPhone = (PROPERTY.agent && PROPERTY.agent.phone) || '(314) 555-0194';
+    thinkingEl.innerHTML = `Thanks for your question! For specific inquiries on <b>${PROPERTY.address}</b>, connect directly with ${agentName} at <b>${agentPhone}</b> or scroll down to schedule an in-person viewing.`;
+  }
   conciergeBody.scrollTop = conciergeBody.scrollHeight;
 }
 

@@ -488,7 +488,10 @@ body {
 <header class="topbar">
   <div class="brand-group">
     <h1 class="brand-title">ESTATESPHERE</h1>
-    <span class="badge-role">Agent Studio</span>
+    <span class="badge-role">Done-For-You Agency Studio</span>
+    <button type="button" class="badge-role" id="authStatusBadge" onclick="promptOperatorKey()" style="cursor:pointer; border-color:rgba(52,211,153,0.4); color:var(--accent-green); background:rgba(52,211,153,0.1);" title="Configure Solopreneur Operator Master Key">
+      🔒 Sovereign VPS Active
+    </button>
   </div>
 
   <nav class="nav-tabs">
@@ -497,6 +500,12 @@ body {
   </nav>
 
   <div class="top-actions">
+    <button type="button" class="btn btn-outline" onclick="createNewListingBlank()" title="Start a fresh Done-For-You Client Listing">
+      + New Client Listing
+    </button>
+    <a href="/drone/?id=fox-plains" target="_blank" class="btn btn-outline" id="dronePreviewBtn" style="border-color:rgba(140,245,183,0.4); color:#8cf5b7;">
+      🚁 3D Drone Twin ↗
+    </a>
     <a href="/analytics" class="btn btn-outline">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
       Analytics & Leads
@@ -766,13 +775,40 @@ body {
             </div>
           </div>
 
+          <!-- Done-For-You Agency Client Delivery & Spec-Site Outreach Kit -->
+          <div class="glass-card" style="border-color:rgba(52,211,153,0.28);">
+            <h3 class="card-title" style="color:var(--accent-green);">Done-For-You Agency Delivery Kit</h3>
+            <p class="card-subtitle">White-label domain mapping, scoped client analytics portal, and ready-to-send realtor spec-site pitch.</p>
+
+            <div class="field" style="margin-bottom:12px;">
+              <label>Custom Client Domain (Optional CNAME)</label>
+              <input type="text" id="p-domain" placeholder="e.g. 15556foxplains.com" />
+            </div>
+
+            <div class="field" style="margin-bottom:12px;">
+              <label>Scoped Realtor Analytics Portal Link</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="clientPortalInput" readonly style="font-size:11px; color:var(--gold-soft);" value="/analytics?propertyId=fox-plains" />
+                <button type="button" class="btn btn-outline" style="padding:8px 12px; font-size:8.5px; white-space:nowrap;" onclick="copyClientPortalLink()">Copy Link</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label style="display:flex; justify-content:space-between; align-items:center;">
+                <span>Spec-Site Realtor Outreach Pitch</span>
+                <button type="button" class="btn btn-outline" style="padding:3px 10px; font-size:8px;" onclick="copyOutreachPitch()">Copy Pitch</button>
+              </label>
+              <textarea id="agencyOutreachPitch" style="font-size:11px; height:92px;">Hi — I built a live 3D Drone & AI Concierge showcase for your listing. Preview the scroll film and 3D drone twin live!</textarea>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div class="glass-card" style="border-color:var(--border-gold); background:rgba(201,168,106,0.04);">
             <button type="submit" class="btn btn-solid" style="width:100%; justify-content:center; padding:14px;">
               💾 Save & Publish Listing
             </button>
             <p style="font-size:10px; text-align:center; color:var(--muted); margin:10px 0 0;">
-              Changes sync instantly to the public buyer microsite.
+              Persists to Sovereign PocketBase/SQLite + MinIO &amp; syncs live microsite + 3D Drone Twin.
             </p>
           </div>
         </div>
@@ -805,6 +841,70 @@ body {
 <script>
 let currentProperty = null;
 let allProperties = [];
+let operatorKey = localStorage.getItem('es_operator_key') || 'estatesphere-solo-2026';
+
+function getAuthHeaders(extra = {}) {
+  return {
+    'x-estatesphere-key': operatorKey,
+    ...extra
+  };
+}
+
+async function promptOperatorKey() {
+  const entered = prompt('Enter Solopreneur Operator Master Key (default: estatesphere-solo-2026):', operatorKey);
+  if (!entered) return;
+  operatorKey = entered.trim();
+  localStorage.setItem('es_operator_key', operatorKey);
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode: operatorKey })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('authStatusBadge').textContent = '🔒 Operator Verified · VPS';
+      showToast('Sovereign Operator session authenticated!');
+    } else {
+      showToast('Invalid key — check SOLO_ADMIN_KEY');
+    }
+  } catch (_) {}
+}
+
+function copyClientPortalLink() {
+  const inp = document.getElementById('clientPortalInput');
+  const fullUrl = new URL(inp.value, window.location.origin).href;
+  navigator.clipboard.writeText(fullUrl);
+  showToast('📋 Scoped Realtor Analytics Link copied!');
+}
+
+function copyOutreachPitch() {
+  const pitch = document.getElementById('agencyOutreachPitch').value;
+  navigator.clipboard.writeText(pitch);
+  showToast('📋 Spec-Site Realtor Pitch copied!');
+}
+
+function createNewListingBlank() {
+  currentProperty = null;
+  document.getElementById('p-brand').value = '';
+  document.getElementById('p-price').value = '$495,000';
+  document.getElementById('p-mls').value = 'MLS# ';
+  document.getElementById('p-address').value = '';
+  document.getElementById('p-city').value = 'St. Louis, Missouri';
+  document.getElementById('p-status').value = 'Active';
+  document.getElementById('p-beds').value = '4';
+  document.getElementById('p-baths').value = '3';
+  document.getElementById('p-sqft').value = '2,650 sq ft';
+  document.getElementById('p-lot').value = '0.35 acres';
+  document.getElementById('p-lower').value = 'Finished Walkout';
+  document.getElementById('p-garage').value = '2-car attached';
+  document.getElementById('p-headline').value = '';
+  document.getElementById('p-lede').value = '';
+  document.getElementById('p-domain').value = '';
+  renderScenesEditor(defaultScenes);
+  switchTab('upload');
+  showToast('✨ Blank Done-For-You Client Listing initialized!');
+}
 
 // Staging image URLs state
 const uploadsMap = {
@@ -857,8 +957,24 @@ async function loadProperty(id = 'fox-plains') {
 
     currentProperty = data.property;
 
-    // Set preview button href
-    document.getElementById('previewBtn').href = `/?id=${currentProperty.id}`;
+    // Set preview button & 3D drone twin hrefs
+    document.getElementById('previewBtn').href = `/?id=${encodeURIComponent(currentProperty.id)}`;
+    const droneBtn = document.getElementById('dronePreviewBtn');
+    if (droneBtn) droneBtn.href = `/drone/?id=${encodeURIComponent(currentProperty.id)}`;
+
+    // Populate Agency Delivery Kit
+    const domainInput = document.getElementById('p-domain');
+    if (domainInput) domainInput.value = currentProperty.customDomain || '';
+    const portalInput = document.getElementById('clientPortalInput');
+    if (portalInput) {
+      const tokenPart = data.clientShareToken ? `&clientToken=${data.clientShareToken}` : '';
+      portalInput.value = `/analytics?propertyId=${encodeURIComponent(currentProperty.id)}${tokenPart}`;
+    }
+    const pitchEl = document.getElementById('agencyOutreachPitch');
+    if (pitchEl) {
+      const origin = window.location.origin;
+      pitchEl.value = `Hi ${currentProperty.agent?.name || 'there'} — I built a live 3D Drone & AI Concierge showcase for your listing at ${currentProperty.address} (${currentProperty.price}):\n\n• Buyer Microsite: ${origin}/?id=${currentProperty.id}\n• 3D FPV Drone Twin: ${origin}/drone/?id=${currentProperty.id}\n\nYour contact info & private showing capture are already wired in!`;
+    }
 
     // Fill form
     document.getElementById('p-brand').value = currentProperty.brand || '';
@@ -939,6 +1055,7 @@ async function handleFileUpload(input, targetKey) {
   try {
     const res = await fetch('/api/upload', {
       method: 'POST',
+      headers: getAuthHeaders(),
       body: formData
     });
     const data = await res.json();
@@ -961,7 +1078,7 @@ async function uploadSceneMedia(input, sceneIdx) {
   formData.append('media', file);
 
   try {
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const res = await fetch('/api/upload', { method: 'POST', headers: getAuthHeaders(), body: formData });
     const data = await res.json();
     if (data.success) {
       const img = document.getElementById(`scene-img-${sceneIdx}`);
@@ -976,16 +1093,46 @@ async function uploadSceneMedia(input, sceneIdx) {
   }
 }
 
-// AI Copy Generator
-function generateAICopy() {
-  const brand = document.getElementById('p-brand').value || 'The Estate';
-  const beds = document.getElementById('p-beds').value || '3';
-  const baths = document.getElementById('p-baths').value || '2';
-  const sqft = document.getElementById('p-sqft').value || '2,400 sq ft';
-  const city = document.getElementById('p-city').value || 'Florissant, Missouri';
+// Option C: Live Sovereign LLM & Architectural Copy Generator
+async function generateAICopy() {
+  const payload = {
+    brand: document.getElementById('p-brand').value || 'The Estate',
+    address: document.getElementById('p-address').value || '',
+    city: document.getElementById('p-city').value || 'Florissant, Missouri',
+    price: document.getElementById('p-price').value || '$254,000',
+    beds: document.getElementById('p-beds').value || '3',
+    baths: document.getElementById('p-baths').value || '2',
+    sqft: document.getElementById('p-sqft').value || '2,400 sq ft',
+    lot: document.getElementById('p-lot').value || '0.25 acres',
+    lower: document.getElementById('p-lower').value || 'Finished Rec Rm',
+    garage: document.getElementById('p-garage').value || '2-car attached'
+  };
+
+  try {
+    const res = await fetch('/api/studio/generate-copy', {
+      method: 'POST',
+      headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('p-headline').value = data.headline;
+        document.getElementById('p-lede').value = data.lede;
+        if (data.scenes && Array.isArray(data.scenes)) {
+          renderScenesEditor(data.scenes);
+        }
+        if (data.outreachPitch && document.getElementById('agencyOutreachPitch')) {
+          document.getElementById('agencyOutreachPitch').value = data.outreachPitch;
+        }
+        showToast(`✨ AI Narrative & 8-Scene Story generated (${data.provider})!`);
+        return;
+      }
+    }
+  } catch (_) {}
 
   const headline = `A distinguished sanctuary designed for effortless indoor-outdoor living.`;
-  const lede = `Set within ${city}, this impeccably composed residence pairs timeless architectural character with thoughtful modern appointments. Offering ${beds} generously proportioned bedrooms, ${baths} spa baths, and ${sqft} of fluid living area, the home opens onto private manicured grounds tailored for year-round entertaining.`;
+  const lede = `Set within ${payload.city}, this impeccably composed residence pairs timeless architectural character with thoughtful modern appointments. Offering ${payload.beds} generously proportioned bedrooms, ${payload.baths} spa baths, and ${payload.sqft} of fluid living area, the home opens onto private manicured grounds tailored for year-round entertaining.`;
 
   document.getElementById('p-headline').value = headline;
   document.getElementById('p-lede').value = lede;
@@ -1008,8 +1155,14 @@ async function saveProperty(e) {
     });
   });
 
+  const slugCandidate = (document.getElementById('p-brand').value || document.getElementById('p-address').value || 'fox-plains')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
   const propertyPayload = {
-    id: currentProperty ? currentProperty.id : 'fox-plains',
+    id: currentProperty ? currentProperty.id : slugCandidate,
+    customDomain: (document.getElementById('p-domain') && document.getElementById('p-domain').value.trim()) || '',
     brand: document.getElementById('p-brand').value,
     address: document.getElementById('p-address').value,
     city: document.getElementById('p-city').value,
@@ -1081,13 +1234,19 @@ async function saveProperty(e) {
   try {
     const res = await fetch('/api/properties', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(propertyPayload)
     });
     const data = await res.json();
     if (data.success) {
-      showToast("Listing saved & deployed successfully!");
-      document.getElementById('previewBtn').href = `/?id=${propertyPayload.id}`;
+      currentProperty = data.property;
+      showToast("Listing saved to Sovereign Store & deployed!");
+      document.getElementById('previewBtn').href = `/?id=${encodeURIComponent(propertyPayload.id)}`;
+      const droneBtn = document.getElementById('dronePreviewBtn');
+      if (droneBtn) droneBtn.href = `/drone/?id=${encodeURIComponent(propertyPayload.id)}`;
+      if (data.clientShareUrl && document.getElementById('clientPortalInput')) {
+        document.getElementById('clientPortalInput').value = data.clientShareUrl;
+      }
     }
   } catch (err) {
     console.error('Failed to save property', err);
@@ -1125,8 +1284,9 @@ async function loadInventory() {
             <span>📐 ${p.specs ? p.specs[2].v : '1,300 sq ft'}</span>
           </div>
           <div class="inv-actions">
-            <button class="btn btn-outline" style="font-size:9px; padding:6px 14px;" onclick="selectPropertyToEdit('${p.id}')">Edit in Studio</button>
-            <a href="/?id=${p.id}" target="_blank" class="btn btn-solid" style="font-size:9px; padding:6px 14px;">View Live Tour ↗</a>
+            <button class="btn btn-outline" style="font-size:9px; padding:6px 12px;" onclick="selectPropertyToEdit('${p.id}')">Edit in Studio</button>
+            <a href="/drone/?id=${encodeURIComponent(p.id)}" target="_blank" class="btn btn-outline" style="font-size:9px; padding:6px 12px; border-color:rgba(140,245,183,0.4); color:#8cf5b7;">🚁 3D Drone</a>
+            <a href="/?id=${encodeURIComponent(p.id)}" target="_blank" class="btn btn-solid" style="font-size:9px; padding:6px 12px;">Live Tour ↗</a>
           </div>
         </div>
       `;

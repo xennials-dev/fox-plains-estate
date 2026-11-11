@@ -1,0 +1,64 @@
+version: "3.9"
+
+# ============================================================================
+# ESTATESPHERE SOVEREIGN SINGLE-VPS STACK (Hostinger KVM VPS)
+# Zero Cloud Lock-In: Express 5 Engine + PocketBase (SQLite) + MinIO (S3)
+# Usage: docker compose -f docker-compose.sovereign.yml up -d
+# ============================================================================
+
+services:
+  estatesphere:
+    build: .
+    image: node:22-alpine
+    container_name: estatesphere-core
+    working_dir: /app
+    command: node server.js
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - SOLO_ADMIN_KEY=${SOLO_ADMIN_KEY:-estatesphere-solo-2026}
+      - POCKETBASE_URL=http://pocketbase:8090
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_BUCKET=estatesphere-media
+      - LLM_API_URL=${LLM_API_URL:-http://host.docker.internal:11434/v1/chat/completions}
+      - LLM_MODEL=${LLM_MODEL:-llama3.2}
+      - CRM_WEBHOOK_URL=${CRM_WEBHOOK_URL:-}
+    volumes:
+      - ./:/app
+      - estatesphere_data:/app/data
+      - estatesphere_uploads:/app/uploads
+    depends_on:
+      - pocketbase
+      - minio
+
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:latest
+    container_name: estatesphere-pocketbase
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - pocketbase_data:/pb_data
+
+  minio:
+    image: minio/minio:latest
+    container_name: estatesphere-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-estatesphere}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-estatesphere-sovereign-storage}
+    volumes:
+      - minio_data:/data
+
+volumes:
+  estatesphere_data:
+  estatesphere_uploads:
+  pocketbase_data:
+  minio_data:

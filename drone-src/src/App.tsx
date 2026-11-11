@@ -6,13 +6,39 @@ import RouteTimeline from "./components/RouteTimeline";
 import ShotManager from "./components/ShotManager";
 import { PROPERTY, WAYPOINTS } from "./data/house";
 import { listShots } from "./lib/shotStore";
-import type { InteriorDisplayMode, InteriorShotView } from "./types";
+import type { InteriorDisplayMode, InteriorShotView, Waypoint } from "./types";
 
 const REVEAL_THRESHOLD = 0.012;
 
-function nearestWaypointIndex(progress: number): number {
-  return Math.round(progress * (WAYPOINTS.length - 1));
+interface ApiPropertyScene {
+  id: string;
+  label: string;
+  title: string;
+  copy?: string;
+  poster?: string;
 }
+
+interface ApiProperty {
+  id: string;
+  brand?: string;
+  address?: string;
+  city?: string;
+  price?: string;
+  headline?: string;
+  specs?: Array<{ k: string; v: string }>;
+  scenes?: ApiPropertyScene[];
+}
+
+const SCENE_TO_WAYPOINT: Record<string, string> = {
+  orbit: "roof",
+  fpv: "main-entry",
+  living: "living",
+  kitchen: "kitchen",
+  bedroom: "primary",
+  lower: "basement-rec",
+  backyard: "rear-door",
+  dusk: "main-entry",
+};
 
 export default function App() {
   const [playing, setPlaying] = useState(true);
@@ -23,24 +49,101 @@ export default function App() {
   const [selectedShot, setSelectedShot] = useState<InteriorShotView | null>(null);
   const [displayMode, setDisplayMode] = useState<InteriorDisplayMode>("inset");
   const [autoInteriorShots, setAutoInteriorShots] = useState(true);
+  const [propertyId, setPropertyId] = useState<string>("fox-plains");
+  const [propertyMeta, setPropertyMeta] = useState({
+    name: PROPERTY.name,
+    city: PROPERTY.city,
+    price: "$254,000",
+    beds: String(PROPERTY.beds),
+    baths: String(PROPERTY.baths),
+    livingAreaSqFt: `${PROPERTY.livingAreaSqFt.toLocaleString()} SQ FT`,
+    note: PROPERTY.note,
+  });
+  const [waypoints, setWaypoints] = useState<Waypoint[]>(WAYPOINTS);
+
+  function nearestWaypointIndex(prog: number): number {
+    return Math.round(prog * (waypoints.length - 1));
+  }
 
   const currentIndex = nearestWaypointIndex(progress);
-  const currentWaypoint = WAYPOINTS[currentIndex];
+  const currentWaypoint = waypoints[currentIndex] || waypoints[0];
 
   const waypointForSelectedShot = useMemo(
-    () => WAYPOINTS.find((wp) => wp.id === selectedShot?.waypointId),
-    [selectedShot],
+    () => waypoints.find((wp) => wp.id === selectedShot?.waypointId),
+    [selectedShot, waypoints],
   );
 
-  // Load pre-bundled official estate photos and custom shots on mount
+  // Option B: Dynamic Property & Scene Photo Synchronization from /api/properties/:id
   useEffect(() => {
-    void listShots().then((loadedShots) => {
-      setShots(loadedShots);
-      // If we are at the initial waypoint, show its photo immediately
+    const params = new URLSearchParams(window.location.search);
+    const idParam = params.get("id") || "fox-plains";
+    setPropertyId(idParam);
+
+    async function hydratePropertyAndShots() {
+      const baseShots = await listShots();
+      try {
+        const res = await fetch(`/api/properties/${encodeURIComponent(idParam)}`);
+        if (res.ok) {
+          const data = (await res.json()) as { success?: boolean; property?: ApiProperty };
+          if (data.success && data.property) {
+            const p = data.property;
+            const specs = p.specs || [];
+            const findSpec = (match: string, fallback: string) =>
+              specs.find((s) => s.k.toLowerCase().includes(match))?.v || fallback;
+
+            setPropertyMeta({
+              name: p.address || p.brand || PROPERTY.name,
+              city: p.city || PROPERTY.city,
+              price: p.price || "$254,000",
+              beds: findSpec("bed", String(PROPERTY.beds)),
+              baths: findSpec("bath", String(PROPERTY.baths)),
+              livingAreaSqFt: findSpec("interior", `${PROPERTY.livingAreaSqFt.toLocaleString()} sq ft`).toUpperCase(),
+              note: p.headline || PROPERTY.note,
+            });
+
+            document.title = `${p.address || p.brand} — 3D FPV Drone Twin`;
+
+            if (p.scenes && p.scenes.length > 0) {
+              // Map dynamic property scene posters onto 3D flight waypoints
+              const wpPhotoOverrides: Record<string, { poster: string; title: string }> = {};
+              p.scenes.forEach((sc) => {
+                const wpId = SCENE_TO_WAYPOINT[sc.id];
+                if (wpId && sc.poster) {
+                  wpPhotoOverrides[wpId] = { poster: sc.poster, title: sc.title || sc.label };
+                }
+              });
+
+              const updatedWaypoints = WAYPOINTS.map((wp) => {
+                const ov = wpPhotoOverrides[wp.id];
+                return ov ? { ...wp, photoUrl: ov.poster, label: ov.title || wp.label } : wp;
+              });
+              setWaypoints(updatedWaypoints);
+
+              // Synchronize shot cards with property's custom scene images
+              const syncedShots = baseShots.map((shot) => {
+                const ov = wpPhotoOverrides[shot.waypointId];
+                return ov
+                  ? { ...shot, name: ov.title || shot.name, objectUrl: ov.poster }
+                  : shot;
+              });
+              setShots(syncedShots);
+              const firstShot = syncedShots.find((s) => s.waypointId === updatedWaypoints[0].id);
+              if (firstShot) setSelectedShot(firstShot);
+              return;
+            }
+          }
+        }
+      } catch (_) {
+        // Fallback to embedded Fox Plains estate dataset
+      }
+
+      setShots(baseShots);
       const initialWp = WAYPOINTS[0];
-      const initialShot = loadedShots.find((s) => s.waypointId === initialWp.id);
+      const initialShot = baseShots.find((s) => s.waypointId === initialWp.id);
       if (initialShot) setSelectedShot(initialShot);
-    });
+    }
+
+    void hydratePropertyAndShots();
   }, []);
 
   // Listen for query params e.g. ?room=kitchen or ?wp=living
@@ -48,43 +151,43 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const targetRoom = params.get("room") || params.get("wp") || params.get("waypoint");
     if (targetRoom) {
-      const idx = WAYPOINTS.findIndex(
+      const idx = waypoints.findIndex(
         (wp) => wp.id === targetRoom || wp.roomKey === targetRoom,
       );
       if (idx >= 0) {
         jumpTo(idx);
       }
     }
-  }, []);
+  }, [waypoints]);
 
   // Auto-synchronize the high-res estate photograph as the drone flies through each room
   useEffect(() => {
     if (!autoInteriorShots || shots.length === 0) return;
-    const currentWp = WAYPOINTS[currentIndex];
+    const currentWp = waypoints[currentIndex];
     if (!currentWp) return;
 
     const matchingShot = shots.find((s) => s.waypointId === currentWp.id);
     if (matchingShot) {
       setSelectedShot(matchingShot);
     }
-  }, [autoInteriorShots, currentIndex, shots]);
+  }, [autoInteriorShots, currentIndex, shots, waypoints]);
 
   function handleProgress(value: number) {
     setProgress(value);
 
     const idx = nearestWaypointIndex(value);
 
-    if (Math.abs(value - idx / Math.max(1, WAYPOINTS.length - 1)) < REVEAL_THRESHOLD) {
+    if (Math.abs(value - idx / Math.max(1, waypoints.length - 1)) < REVEAL_THRESHOLD) {
       setRouteIndex(idx);
     }
   }
 
   function jumpTo(index: number) {
     setRouteIndex(index);
-    setProgress(index / Math.max(1, WAYPOINTS.length - 1));
+    setProgress(index / Math.max(1, waypoints.length - 1));
 
     if (shots.length > 0) {
-      const targetWp = WAYPOINTS[index];
+      const targetWp = waypoints[index];
       const matchingShot = shots.find((s) => s.waypointId === targetWp?.id);
       if (matchingShot) {
         setSelectedShot(matchingShot);
@@ -95,7 +198,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <DroneScene
-        waypoints={WAYPOINTS}
+        waypoints={waypoints}
         routeIndex={routeIndex}
         playing={playing}
         speed={speed}
@@ -110,24 +213,24 @@ export default function App() {
         />
 
         <div className="property-card glass">
-          <div className="eyebrow">ESTATE DRONE TWIN · FLORISSANT, MO</div>
-          <h1>{PROPERTY.name}</h1>
-          <p>{PROPERTY.city}</p>
+          <div className="eyebrow">ESTATE DRONE TWIN · {propertyMeta.price}</div>
+          <h1>{propertyMeta.name}</h1>
+          <p>{propertyMeta.city}</p>
           <div className="property-card__facts">
-            <span>{PROPERTY.beds} BD</span>
-            <span>{PROPERTY.baths} BA</span>
-            <span>{PROPERTY.livingAreaSqFt.toLocaleString()} SQ FT</span>
-            <span style={{ color: "#8cf5b7" }}>11 ESTATE PHOTOS</span>
+            <span>{propertyMeta.beds} BD</span>
+            <span>{propertyMeta.baths} BA</span>
+            <span>{propertyMeta.livingAreaSqFt}</span>
+            <span style={{ color: "#8cf5b7" }}>LIVE TWIN</span>
           </div>
-          <small>{PROPERTY.note}</small>
+          <small>{propertyMeta.note}</small>
         </div>
 
         <div className="top-actions">
           <a
-            href="/"
+            href={`/?id=${encodeURIComponent(propertyId)}`}
             className="button button--dark"
             style={{ textDecoration: "none" }}
-            title="Return to Fox Plains Estate Main Presentation"
+            title="Return to Property Main Presentation"
           >
             ← Main Presentation
           </a>
@@ -148,8 +251,8 @@ export default function App() {
 
         {/* Room Photo Quick-Selector Strip */}
         <div className="room-strip glass">
-          {WAYPOINTS.filter((wp) => Boolean(wp.photoUrl)).map((wp) => {
-            const wpIndex = WAYPOINTS.findIndex((w) => w.id === wp.id);
+          {waypoints.filter((wp) => Boolean(wp.photoUrl)).map((wp) => {
+            const wpIndex = waypoints.findIndex((w) => w.id === wp.id);
             const isActive = currentIndex === wpIndex;
             return (
               <button
@@ -166,12 +269,12 @@ export default function App() {
         </div>
 
         <ShotManager
-          waypoints={WAYPOINTS}
+          waypoints={waypoints}
           onShotSelect={(shot) => {
             setSelectedShot(shot);
             setDisplayMode("inset");
 
-            const wpIndex = WAYPOINTS.findIndex(
+            const wpIndex = waypoints.findIndex(
               (wp) => wp.id === shot?.waypointId,
             );
 
@@ -248,14 +351,14 @@ export default function App() {
 
             <button
               className="button button--dark"
-              onClick={() => jumpTo(WAYPOINTS.length - 1)}
+              onClick={() => jumpTo(waypoints.length - 1)}
             >
               Aerial Orbit
             </button>
           </div>
 
           <RouteTimeline
-            waypoints={WAYPOINTS}
+            waypoints={waypoints}
             progress={progress}
             onSelect={jumpTo}
           />
